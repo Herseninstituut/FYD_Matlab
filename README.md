@@ -1,12 +1,10 @@
-# OpenAccessStorage
+# Follow Your Data (FYD) for matlab
 A library of scripts to index global metadata automatically, and make data web/machine searchable.
 
 You can inspect the database here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):
 [nhi-fyd/](http://nhi-fyd.nin.knaw.nl/)
 
-To be convinced as to why this system is important, see our WIKI at this link: [WIKI](https://github.com/VisionandCognition/OpenAccessStorage/wiki).
-
-Notifications about OpenAccessStorage will also appear in our micrsoft teams data management channel.
+Notifications about FYD_MAtlab will also appear in our micrsoft teams data management channel.
 
 ***
 #### Getting started ####
