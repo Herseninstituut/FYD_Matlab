@@ -82,6 +82,8 @@ function getdbfields_OpeningFcn(hObject, eventdata, handles, varargin)
         dbpar = nhi_fyd_CCCparms();
     elseif strcmp(varargin{1}, 'AXS')    %kolelab
         dbpar = nhi_fyd_AXSparms();
+    elseif strcmp(varargin{1}, 'SandC')   %vansomererenlab
+        dbpar = nhi_fyd_SandCparms();
     elseif strcmp(varargin{1}, 'NandN')   %saltalab
         dbpar = nhi_fyd_NandNparms();
     elseif strcmp(varargin{1}, 'TM')     %TestMe database
