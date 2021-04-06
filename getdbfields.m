@@ -107,8 +107,8 @@ function getdbfields_OpeningFcn(hObject, eventdata, handles, varargin)
     VC.setups = [];
     VC.stims = [];
     record = [];
-    set(handles.e_date, 'String', datestr(now, 'yyyy-mm-dd'));
-    record.date = datestr(now, 'yyyy-mm-dd');
+    set(handles.e_date, 'String', datestr(now, 'yyyymmdd'));
+    record.date = datestr(now, 'yyyymmdd');
     record.version = '1.0'; %json field version
     
     if ~isempty(VC.projects)
@@ -528,8 +528,8 @@ function date_pb_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 res = uical();
-set(handles.e_date, 'String', datestr(res, 'yyyy-mm-dd' ))
-handles.record.date = datestr(res, 'yyyy-mm-dd' );
+set(handles.e_date, 'String', datestr(res, 'yyyymmdd' ))
+handles.record.date = datestr(res, 'yyyymmdd' );
 
 guidata(hObject, handles);
 
