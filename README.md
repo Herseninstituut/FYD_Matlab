@@ -21,7 +21,21 @@ Getdbfields is now replaced by **getFYD**.  GetFYD is easier to use and will gen
 GetFYD is a wrapper for a matlab app, that automatically generates a sessionid based on subjectid, date and sessionnr. 
 Simply run getFYD to enter and select your identifiers for projects, datasets, conditions, subjects and stimuli.
 
-
+## JSON file text template of required fields
+```
+{
+	"version": "1.0",
+	"project": "Ach",
+	"dataset": "ActiveGo",
+	"date": "20210416",
+	"subject": "Andy",
+	"investigator": "Cor",
+	"setup": "EphysSmall",
+	"condition": "awake",
+	"stimulus": "NoStim",
+	"logfile": "Andy_20210416_1_log",
+ }
+```
 ***
 ### Example mfile to create ID_session.json files using getdbfields
 
