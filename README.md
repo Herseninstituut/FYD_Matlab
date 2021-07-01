@@ -8,9 +8,9 @@ Notifications about FYD_MAtlab will also appear in our micrsoft teams data manag
 
 ***
 #### Getting started ####
-* Clone/download this repository to your local machine and add the root folder and the mysql folder to your Matlab path. 
-* Add jsonlab if you are running Matlab older than 2017b.
-* Obtain a credentials file from your systems manager (me), place this in the par folder of FYD_MATLAB and add to the matlab path.
+* Clone/download this repository to your local machine and add the root folder and the mysql folder to your Matlab path.
+  Add jsonlab if you are running Matlab older than 2017b.
+* Create a subfolder in FYD_Matlab called `par` and copy your lab-based credentials file (`nhi_fyd_XXparms.m`) there.
 * Use ```getFYD()``` to create a basic json structure with all the required fields.
 * Store 1 json file with each recording session (for example, each block) in a separate folder.
 * Always keep the json files together with your data.
@@ -21,7 +21,7 @@ Notifications about FYD_MAtlab will also appear in our micrsoft teams data manag
 ## Using getFYD to create session.json files.
 
 Getdbfields is now replaced by **getFYD**.  GetFYD is easier to use and will generate a JSON file at the location of your choice.
-GetFYD is a wrapper for a matlab app, that automatically generates a sessionid based on subjectid, date and sessionnr. 
+GetFYD is a wrapper for a matlab app, that automatically generates a sessionid based on subjectid, date and sessionnr.
 Simply run getFYD to enter and select your identifiers for projects, datasets, conditions, subjects and stimuli.
 
 ## JSON file text template of required fields
@@ -74,7 +74,7 @@ save('test1.json', 'StrJson')
 Since Matlab 2017b, you can use ```jsonencode()``` to create a json object. Prior to Matlab 2017b, you need to use ```savejson()```, which you will find inside jsonlab (included in this repository).
 
 ***
-The outcome of the indexing is reported in a log with html format that can be visualized in your browser. For each Lab a link to an error log is provided on the webapp in the menu of the inlog page. It is important to check this log, it will report errors when values in a json file are not consistent with registered identifiers. To make it easier for users to interpret the errors and fix them, the script ```ParseErrorLog``` can be used. 
+The outcome of the indexing is reported in a log with html format that can be visualized in your browser. For each Lab a link to an error log is provided on the webapp in the menu of the inlog page. It is important to check this log, it will report errors when values in a json file are not consistent with registered identifiers. To make it easier for users to interpret the errors and fix them, the script ```ParseErrorLog``` can be used.
 
 #### ParseErrorLog usage ####
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
@@ -90,17 +90,17 @@ Datajoint is an addon in matlab and a module in python. It requires a class fold
 
 
 ```
-% EXAMPLE USING DATAJOINT 
+% EXAMPLE USING DATAJOINT
 % import credentials from your parameter file
 dbpar = nhi_fyd_LABparms();
- 
+
 setenv('DJ_HOST', dbpar.Server)
 setenv('DJ_USER', dbpar.User)
 setenv('DJ_PASS', dbpar.Passw)
- 
+
 Con = dj.conn();
 % Database = dbpar.Database;  = yourlab
- 
+
 
 %% first construct a query
 % here simply for all in the table
@@ -115,9 +115,8 @@ Projects = fetch(qproj, 'entrydate', 'status')
 % but this could also be a dataset, a subject, a condition, a date
 qsess = yourlab.Sessions & 'project="testProject"';
 %now retrieve the sessions you want and the url field
-sessions = fetch(qsess, 'url') 
+sessions = fetch(qsess, 'url')
 
 %% Process urls to windows path
 P = arrayfun(@(x) fullfile(strrep(x.url, 'mnt', '')), sessions, 'UniformOutput', false)
 ```
-
