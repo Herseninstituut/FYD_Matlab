@@ -8,11 +8,14 @@ Notifications about FYD_MAtlab will also appear in our micrsoft teams data manag
 
 ***
 #### Getting started ####
-* Clone/download this repository to your local machine and add the root folder and the mysql folder to your Matlab path. Also add jsonlab if you are running Matlab older than 2017b.
+* Clone/download this repository to your local machine and add the root folder and the mysql folder to your Matlab path. 
+* Add jsonlab if you are running Matlab older than 2017b.
+* Obtain a credentials file from your systems manager (me), place this in the par folder of FYD_MATLAB and add to the matlab path.
 * Use ```getFYD()``` to create a basic json structure with all the required fields.
-* Store 1 json file with each recording session (for example, each block).
-* Always keep the json files together with your raw data.
-* A server script automatically indexes these files, if they are stored along with your data.
+* Store 1 json file with each recording session (for example, each block) in a separate folder.
+* Always keep the json files together with your data.
+* A server script automatically indexes the json files and keeps an up to date list of urls to your data.
+* Do not put spaces in your folder names.
 
 ***
 ## Using getFYD to create session.json files.
@@ -71,7 +74,7 @@ save('test1.json', 'StrJson')
 Since Matlab 2017b, you can use ```jsonencode()``` to create a json object. Prior to Matlab 2017b, you need to use ```savejson()```, which you will find inside jsonlab (included in this repository).
 
 ***
-The outcome of the indexing is reported in a log with html format that can be visualized in your browser. For each Lab a link to a log is provided. It is important to check this log, it will report errors when values in a json file are not consistent with registered identifiers. To make it easier for users to interpret the errors and fix them, the script ```ParseErrorLog``` can be used. 
+The outcome of the indexing is reported in a log with html format that can be visualized in your browser. For each Lab a link to an error log is provided on the webapp in the menu of the inlog page. It is important to check this log, it will report errors when values in a json file are not consistent with registered identifiers. To make it easier for users to interpret the errors and fix them, the script ```ParseErrorLog``` can be used. 
 
 #### ParseErrorLog usage ####
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
