@@ -18,6 +18,7 @@ Notifications about FYD_MAtlab will also appear in our micrsoft teams data manag
 * Always keep the json files together with your data.
 * A server script automatically indexes the json files and keeps an up to date list of urls to your data.
 * Do not put spaces in your folder names.
+* You may need to install vc_redist.x64.exe if you see an error such as; "Invalid MEX-file....: The specified module could not be found." The vs runtime can be downloaded from support.microsoft.com
 
 ***
 ## Using getFYD to create session.json files.
