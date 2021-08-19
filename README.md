@@ -11,7 +11,7 @@ Notifications about FYD_MAtlab will also appear in our micrsoft teams data manag
 
 * Clone/download this repository to your local machine and add the root folder and the mysql folder to your Matlab path. 
 * Add jsonlab if you are running Matlab older than 2017b.
-* Obtain a credentials file from your systems manager (me).
+* Obtain a credentials file from your systems manager.
 * Create a subfolder in FYD_Matlab called `par` and copy your lab-based credentials file (`nhi_fyd_XXparms.m`) there.
 * Use ```getFYD()``` to create a basic json structure with all the required fields.
 * Store 1 json file with each recording session (for example, each block) in a separate folder.
