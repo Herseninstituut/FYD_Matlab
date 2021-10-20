@@ -11,13 +11,15 @@ Notifications about FYD_MAtlab will also appear in our micrsoft teams data manag
 
 * Clone/download this repository to your local machine and add the root folder and the mysql folder to your Matlab path. 
 * Add jsonlab if you are running Matlab older than 2017b.
-* Obtain a credentials file from your systems manager (me).
+* Obtain a credentials file from your systems manager.
 * Create a subfolder in FYD_Matlab called `par` and copy your lab-based credentials file (`nhi_fyd_XXparms.m`) there.
 * Use ```getFYD()``` to create a basic json structure with all the required fields.
 * Store 1 json file with each recording session (for example, each block) in a separate folder.
+* Each json file should have a unique name consisting of an id (subject_data_sessnr
 * Always keep the json files together with your data.
 * A server script automatically indexes the json files and keeps an up to date list of urls to your data.
-* Do not put spaces in your folder names.
+* Do not put spaces in the folder names and identifiers you create for your json files.
+* You may need to install [vc_redist.x64.exe](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) if you see an error such as; "Invalid MEX-file....: The specified module could not be found." (Be aware that you need administrator rights to install this.)
 
 ***
 ## Using getFYD to create session.json files.
