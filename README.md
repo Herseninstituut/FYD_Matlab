@@ -1,5 +1,6 @@
 # Follow Your Data (FYD) for matlab
 A library of scripts to index global metadata automatically, and make data web/machine searchable.
+[![DOI](https://zenodo.org/badge/342855808.svg)](https://zenodo.org/badge/latestdoi/342855808)
 
 You can inspect the database here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):
 [nhi-fyd/](https://nhi-fyd.nin.knaw.nl/)
