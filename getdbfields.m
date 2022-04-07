@@ -86,6 +86,14 @@ function getdbfields_OpeningFcn(hObject, eventdata, handles, varargin)
         dbpar = nhi_fyd_SandCparms();
     elseif strcmp(varargin{1}, 'NandN')   %saltalab
         dbpar = nhi_fyd_NandNparms();
+    elseif strcmp(varargin{1}, 'RSP')   %kamermanslab
+        dbpar = nhi_fyd_RSPparms();
+    elseif strcmp(varargin{1}, 'HYP')   %kalsbeeklab
+        dbpar = nhi_fyd_HYPparms();
+    elseif strcmp(varargin{1}, 'NRG')   %Verhagenlab
+        dbpar = nhi_fyd_NRGparms();
+    elseif strcmp(varargin{1}, 'SND')   %Lohmannlab
+        dbpar = nhi_fyd_SNDparms();
     elseif strcmp(varargin{1}, 'TM')     %TestMe database
         dbpar = nhi_fyd_TMparms();
     else

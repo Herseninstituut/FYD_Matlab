@@ -6,7 +6,7 @@ function ObjSub = fieldsubject()
     ObjSub.subject = '';
     ObjSub.species = '';
     ObjSub.sex = '';
-    ObjSub.genotype = '';
+    ObjSub.genotype = 'none';
     
     h = 360;
     F = figure('menu', 'none', 'toolbar', 'none');
