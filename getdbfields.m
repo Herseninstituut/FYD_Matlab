@@ -511,18 +511,19 @@ if ~isempty(ObjSub)
        %first retrieve id of project 
 %        projectidx = handles.projectidx;
         project = handles.record.project;
-
+        projectidx = mysql(['SELECT idx FROM projects WHERE projectid = "' project '"' ] );
+        
         if isempty(subidx) %subject does not exist in database
             QUERY = ['INSERT INTO subjects '  ...
                 '(subjectid, species, sex, genotype) ' ...
                 'VALUES( "' subject '" , "' ObjSub.species '" , "' ObjSub.sex '" , "' ObjSub.genotype '") ' ];    
             mysql(QUERY);
 
- %           subidx = mysql(['SELECT idx FROM subjects WHERE subjectid = "' subject '"' ] ); %SUBJECTS are unique       
+            subidx = mysql(['SELECT idx FROM subjects WHERE subjectid = "' subject '"' ] ); %SUBJECTS are unique       
         end
 
-        QUERY = ['INSERT INTO projects_subjects (project, subject) '...
-                 'VALUES( "' project '" , "' subject '" )'];     
+        QUERY = ['INSERT INTO projects_subjects (project, projectidx, subject, subjectidx) '...
+                 'VALUES( "' project '" , ' projectidx{1} ', "' subject '", ' subidx{1} ' )'];     
         mysql(QUERY);
         guidata(hObject, handles);
     end
@@ -660,15 +661,16 @@ if ~isempty(ObjStim)
             QUERY = ['INSERT INTO stimulus ( stimulusid, shortdescr ) VALUE( "' stimulus '", "' ObjStim.shortdescr '" ) ' ];
             mysql(QUERY);
 
-  %          QUERY = ['SELECT idx FROM stimulus WHERE stimulusid = "' stimulus '"'];    
-  %          stimulusidx = mysql(QUERY);
+            QUERY = ['SELECT idx FROM stimulus WHERE stimulusid = "' stimulus '"'];    
+            stimulusidx = mysql(QUERY);
         end
 
    %     projectidx = handles.projectidx;
         project = handles.record.project;
-
-        QUERY = ['INSERT INTO projects_stimulus ( project, stimulus ) '...
-                 'VALUES ( "' project '" ,"' stimulus '" )'];
+        projectidx = mysql(['SELECT idx FROM projects WHERE projectid = "' project '"' ] );
+        
+        QUERY = ['INSERT INTO projects_stimulus ( project, projectidx, stimulus, stimulusidx ) '...
+                 'VALUES ( "' project '", ' projectidx{1} ', "' stimulus '", ' stimulusidx{1} ' )'];
         mysql(QUERY);
     end
 end
