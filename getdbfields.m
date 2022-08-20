@@ -516,7 +516,7 @@ if ~isempty(ObjSub)
         if isempty(subidx) %subject does not exist in database
             QUERY = ['INSERT INTO subjects '  ...
                 '(subjectid, species, sex, genotype) ' ...
-                'VALUES( "' subject '" , "' ObjSub.species '" , "' ObjSub.sex '" , "' ObjSub.genotype '") ' ];    
+                'VALUES( "' subject '" , "' ObjSub.species '" , "' ObjSub.sex '" , "' ObjSub.genotype '");' ];    
             mysql(QUERY);
 
             subidx = mysql(['SELECT idx FROM subjects WHERE subjectid = "' subject '"' ] ); %SUBJECTS are unique       
