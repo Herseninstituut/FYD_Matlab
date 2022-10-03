@@ -84,6 +84,14 @@ The outcome of the indexing is reported in a log with html format that can be vi
 #### ParseErrorLog usage ####
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
 ***
+## Find and Retrieve urls ##
+To get access to your data, you can use **callfydAccess.m** to retrieve records from the database that fit your search criteria. Once these are retrieved we can generate a list of files associated with each json tagfile in a selectable tree-view.
+```
+	urls = callfydAccess();
+```
+
+
+***
 
 ### dj (datajoint tools) GetDouble_JSONS.mlx and importandgenerate.mlx
 These additional tools are supplied to give you a headstart using datajoint to manage your database : https://docs.datajoint.io/
