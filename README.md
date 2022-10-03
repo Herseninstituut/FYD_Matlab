@@ -89,7 +89,15 @@ To get access to your data, you can use **callfydAccess.m** to retrieve records 
 ```
 	urls = callfydAccess();
 ```
-
+<img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/fydAccess.png" height="400" >
+After pressing save&close a list of urls is returned:
+``` 
+    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001.mat'                             }  
+    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_Bh.mat'                          }  
+    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase.mat'     }  
+    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase_1sNL.mat'}  
+    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_1_log.mat'                           }  
+```
 
 ***
 
