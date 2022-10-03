@@ -85,18 +85,19 @@ The outcome of the indexing is reported in a log with html format that can be vi
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
 ***
 ## Find and Retrieve urls ##
-To get access to your data, you can use **callfydAccess.m** to retrieve records from the database that fit your search criteria. Once these are retrieved we can generate a list of files associated with each json tagfile in a selectable tree-view.
+To get access to your data, you can use **callfydAccess.m** to retrieve records from the database that fit your search criteria. Once these are retrieved (press display) a list of files is generated, associated with each json tagfile, in a selectable tree-view. Just as with the windows search bar, you can select file types with (\*) as a wild card character.
 ```
 	urls = callfydAccess();
 ```
 <img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/fydAccess.png" height="400" >
-After pressing save&close a list of urls is returned:
+Select all or just a few checkboxes to retrieve the urls of interest. After pressing save&close a list of urls is returned:  
+
 ``` 
-    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001.mat'                             }  
-    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_Bh.mat'                          }  
-    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase.mat'     }  
-    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase_1sNL.mat'}  
-    {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_1_log.mat'                           }  
+	{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001.mat'				} 
+	{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_Bh.mat'			} 
+	{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase.mat' 	}   
+	{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase_1sNL.mat'}   
+	{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_1_log.mat'                           } 
 ```
 
 ***
