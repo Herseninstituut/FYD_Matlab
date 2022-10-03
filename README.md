@@ -67,7 +67,7 @@ json.logfile ='ID_log.mat'; %name for your logfile :
 json.comment = 'This is up to you; Add some comments';
 
 % you can add as many extra fields as you want, with whatever information you find useful.
-json.blablablafield = 'blablabla';
+json.foo = 'bar';
 
 % Store the datafile along with the data: it is very important that the filename of your json file
 % ends in '_session.json'!! The server will not index your json file if you don't do this. It is
