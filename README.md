@@ -92,7 +92,7 @@ To get access to your data, you can use **callfydAccess.m** to retrieve records 
 ```
 	urls = callfydAccess();
 ```
-<img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/fydAccess.png" height="400" >
+<img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/fydAccess.png" height="300" >
 Select all or just a few checkboxes to retrieve the urls of interest. After pressing save&close a list of urls is returned:  
 
 ``` 
