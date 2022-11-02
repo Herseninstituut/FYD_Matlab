@@ -88,7 +88,11 @@ The outcome of the indexing is reported in a log with html format that can be vi
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
 ***
 ## Find and Retrieve urls ##
-To get access to your data, you can use **callfydAccess.m** to retrieve records from the database that fit your search criteria. Once these are retrieved (press display) a list of files is generated, associated with each json tagfile, in a selectable tree-view. Just as with the windows search bar, you can select file types with (\*) as a wild card character.
+A simple way to retrieve the urls for data associated with json files y9ou wat to access you can use:  
+``` urls = getSessions(project='someProject', subject='aSubject') ```  
+Use as keys; project, dataset, excond, subject, stimulus, setup, date
+
+To get access to your data, you can use **callfydAccess.m** to retrieve records from the database that fit your search criteria. Once these are retrieved (press display) a list of files is generated, associated with each json tagfile, in a selectable tree-view. Just as with the windows search bar, you can select file types with (\*) as a wild card character. nb. this can take quite a while to finish!
 ```
 	urls = callfydAccess();
 ```
@@ -105,10 +109,13 @@ Select all or just a few checkboxes to retrieve the urls of interest. After pres
 
 ***
 
-### dj (datajoint tools) GetDouble_JSONS.mlx and importandgenerate.mlx
-These additional tools are supplied to give you a headstart using datajoint to manage your database : https://docs.datajoint.io/
-Datajoint is an addon in matlab and a module in python. It requires a class folder with table definitions (an example, for our test database, is included)
+### dj (datajoint) 
+use datajoint  : https://docs.datajoint.io/
+Datajoint is an addon in matlab and a module in python. It requires a class folder with table definitions (an example, for our test database, is included).  
+testexample.m shows how to use datajoint in connection with the FYD database to make an updatable spreadsheet with a few lines of code.  
+Once you have defined a table (see example.m in the +shared folder) it is easy to update this table as new data arrives in the database. With a few extra lines you can retrieve the table contents and export it to an excel spreadsheet.
 
+GetDouble_JSONS.mlx and importandgenerate.mlx are two additional tools to manage your database
 ```GetDouble_JSONS``` Checks for double entries. In some cases users copy their data to more than one location, leading to records with urls to both locations in the database. You can use this info to remove superfluous data, or to remove the jsonfiles.
 
 ```importandgenerate``` Helps to generate identifiers and json files for datasets not yet associated with json files. Usually because json files were not generated at the time of data collection. Users should first fill in an excel sheet with the required information for each instance (path, project, dataset, subject, stimulus, condition, setup, investigator, sessionid, date) that will require a json file. (see example)
