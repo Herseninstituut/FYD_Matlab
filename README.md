@@ -88,11 +88,11 @@ The outcome of the indexing is reported in a log with html format that can be vi
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
 ***
 ## Find and Retrieve urls ##
-A simple way to retrieve the urls for data associated with json files y9ou wat to access you can use:  
+A simple way to retrieve the urls for the data you want to access, you can use this function with search criteria.  
 ``` urls = getSessions(project='someProject', subject='aSubject') ```  
-Use as keys; project, dataset, excond, subject, stimulus, setup, date
+In any combination, you can use the following search fields ; project, dataset, excond, subject, stimulus, setup, date
 
-To get access to your data, you can use **callfydAccess.m** to retrieve records from the database that fit your search criteria. Once these are retrieved (press display) a list of files is generated, associated with each json tagfile, in a selectable tree-view. Just as with the windows search bar, you can select file types with (\*) as a wild card character. nb. this can take quite a while to finish!
+Alternatively, you can use **callfydAccess.m**. Once you have filled in your search criteria press display to retrieve a list of files, associated with each json file in a selectable tree-view. Just as with the windows search bar, you can select file types with (\*) as a wild card character. nb. this can take quite a while to finish!
 ```
 	urls = callfydAccess();
 ```
