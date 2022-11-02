@@ -113,42 +113,22 @@ Select all or just a few checkboxes to retrieve the urls of interest. After pres
 use datajoint  : https://docs.datajoint.io/
 Datajoint is an addon in matlab and a module in python. It requires a class folder with table definitions (an example, for our test database, is included).  
 testexample.m shows how to use datajoint in connection with the FYD database to make an updatable spreadsheet with a few lines of code.  
+```
+setenvdj    %set environment credentials for MySql database
+populate(shared.Example) %update table of records with specific characteristics
+```
 Once you have defined a table (see example.m in the +shared folder) it is easy to update this table as new data arrives in the database. With a few extra lines you can retrieve the table contents and export it to an excel spreadsheet.
+```
+%% query our table of interest
+Dtbl = fetch(shared.Example, '*');
+T = struct2table(Dtbl);
 
+%% Export to Excel sheet
+selpath = uigetdir();
+filename = fullfile(selpath, 'Example.xlsx');
+writetable(T,filename,'Sheet',1)
+```
 GetDouble_JSONS.mlx and importandgenerate.mlx are two additional tools to manage your database
 ```GetDouble_JSONS``` Checks for double entries. In some cases users copy their data to more than one location, leading to records with urls to both locations in the database. You can use this info to remove superfluous data, or to remove the jsonfiles.
 
-```importandgenerate``` Helps to generate identifiers and json files for datasets not yet associated with json files. Usually because json files were not generated at the time of data collection. Users should first fill in an excel sheet with the required information for each instance (path, project, dataset, subject, stimulus, condition, setup, investigator, sessionid, date) that will require a json file. (see example)
-
-
-```
-% EXAMPLE USING DATAJOINT
-% import credentials from your parameter file
-dbpar = nhi_fyd_LABparms();
-
-setenv('DJ_HOST', dbpar.Server)
-setenv('DJ_USER', dbpar.User)
-setenv('DJ_PASS', dbpar.Passw)
-
-Con = dj.conn();
-% Database = dbpar.Database;  = yourlab
-
-
-%% first construct a query
-% here simply for all in the table
-qproj = yourlab.Projects;
-
-% then you fetch, including extra fields the records you want to retrieve (see table
-% definitions)
-Projects = fetch(qproj, 'entrydate', 'status')
-
-
-% here from the sessions table with a selection clause (:which project)
-% but this could also be a dataset, a subject, a condition, a date
-qsess = yourlab.Sessions & 'project="testProject"';
-%now retrieve the sessions you want and the url field
-sessions = fetch(qsess, 'url')
-
-%% Process urls to windows path
-P = arrayfun(@(x) fullfile(strrep(x.url, 'mnt', '')), sessions, 'UniformOutput', false)
-```
+```importandgenerate``` Helps to generate identifiers and json files for datasets not yet associated with json files. Usually because json files were not generated at the time of data collection. Users should first fill in an excel sheet with the required information for each instance (path, project, dataset, subject, stimulus, condition, setup, investigator, sessionid, date) that will require a json file.  
