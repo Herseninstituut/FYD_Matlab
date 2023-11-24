@@ -88,7 +88,7 @@ The outcome of the indexing is reported in a log with html format that can be vi
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
 ***
 ## How to make json files for an existing dataset ##
-Organize your data first according to the NIN  [data protocol](https://herseninstituut.sharepoint.com/sites/RDM/SitePages/FAIR-data.aspx)  
+Organize your data according to the NIN  [data protocol](https://herseninstituut.sharepoint.com/sites/RDM/SitePages/FAIR-data.aspx)  first.
 Each recording session with associated metadata should be in a separate folder. Ideally, the filename of each file, should contain sessionid of the containing folder.
 Here is an example, according to the recommended schema: project/data_collection/dataset/subject/session
 ```
@@ -106,11 +106,12 @@ L5_Tuftapicsoma
  ```
 
 If you have ordered you data this way, you can now make an excel sheet with the neccessary metadata to automatically generate the json files at the appropriate locations. jsontemplate.xlsl contains columns for each required field.  
-[excel template](https://github.com/Herseninstituut/FYD_Matlab/blob/master/excel.png) 
 
-When your list is complete, generate the json files with : **Generatejsonfiles.m** 
+<img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/excel.png" >
 
+When your list is complete, generate the json files with : **Generatejsonfiles.m** and the json files will be saved at the provided path locations.
 
+***
 ## Find and Retrieve urls ##
 A simple way to retrieve the urls for the data you want to access, you can use this function with search criteria.  
 ``` urls = getSessions(project='someProject', subject='aSubject') ```  
