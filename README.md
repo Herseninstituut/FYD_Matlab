@@ -87,10 +87,10 @@ The outcome of the indexing is reported in a log with html format that can be vi
 #### ParseErrorLog usage ####
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
 ***
-### How to make json files for an existing dataset ###
-First you should organize your data according to the NIN  [data protocol](https://herseninstituut.sharepoint.com/sites/RDM/SitePages/FAIR-data.aspx)  
+## How to make json files for an existing dataset ##
+Organize your data first according to the NIN  [data protocol](https://herseninstituut.sharepoint.com/sites/RDM/SitePages/FAIR-data.aspx)  
 Each recording session with associated metadata should be in a separate folder. Ideally, the filename of each file, should contain sessionid of the containing folder.
-Here is an example, with the prescribed schema: project/data_collection/dataset/subject/session
+Here is an example, according to the recommended schema: project/data_collection/dataset/subject/session
 ```
 L5_Tuftapicsoma
   /data_collection
@@ -105,7 +105,10 @@ L5_Tuftapicsoma
 				Pollux_20200323_003_session.json 
  ```
 
-If you have ordered you data this way, you can now make an excel sheet with the neccessary metadata to automatically generate the json files at the appropriate locations. jsontemplate.xlsl contains columns for each required field. When you list is complete, generate the json files with  
+If you have ordered you data this way, you can now make an excel sheet with the neccessary metadata to automatically generate the json files at the appropriate locations. jsontemplate.xlsl contains columns for each required field.  
+[excel template](https://github.com/Herseninstituut/FYD_Matlab/blob/master/excel.png) 
+
+When your list is complete, generate the json files with : **Generatejsonfiles.m** 
 
 
 ## Find and Retrieve urls ##
