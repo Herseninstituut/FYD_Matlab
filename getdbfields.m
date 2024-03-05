@@ -70,6 +70,8 @@ function getdbfields_OpeningFcn(hObject, eventdata, handles, varargin)
     
     if strcmp(varargin{1}, 'VC')         %roelfsemalab
         dbpar = nhi_fyd_VCparms();
+    elseif strcmp(varargin{1}, 'VandC')    %roelfsemalab
+        dbpar = nhi_fyd_VandCparms();
     elseif strcmp(varargin{1}, 'MVP')    %leveltlab
         dbpar = nhi_fyd_MVPparms();
     elseif strcmp(varargin{1}, 'NandB')  %Willuhnlab
