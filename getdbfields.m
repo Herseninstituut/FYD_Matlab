@@ -842,12 +842,13 @@ if ~isempty(answer)
         dgc = mysql('use', handles.dbpar.Database);
 
         %first retrieve id of project 
-%        projectidx = handles.projectidx;
         project = handles.record.project;
-
+        rec = mysql(['SELECT idx FROM projects WHERE projectid = "' project '"' ] );
+        projectidx = rec{1};
+        
         QUERY = ['INSERT INTO datasets '  ...
-            '(datasetid, project, shortdescr, longdescr) ' ...
-            'VALUES( "' Dsettitle '", "' project '", "' Shortdescr '", "' Text '") ' ];   
+            '(datasetid, project, projectidx, shortdescr, longdescr) ' ...
+            'VALUES( "' Dsettitle '", "' project '", "' projectidx '", "' Shortdescr '", "' Text '") ' ];   
         mysql(QUERY); 
 
         %create default condition
