@@ -503,33 +503,36 @@ if ~isempty(ObjSub)
     if length(subject) > handles.fieldlength.subject 
         disp('invalid input, too long')
     else  
-        subidx = mysql(['SELECT idx FROM subjects WHERE subjectid = "' subject '"' ] );
-
-        Ln = length(handles.VC.subjects);
-        handles.VC.subjects{Ln+1} = ObjSub.subject;
-        set(handles.e_subject, 'string', handles.VC.subjects )
-        set(handles.e_subject, 'Value', Ln+1)
-        set(handles.e_subject, 'Enable', 'on')
-        handles.record.subject = ObjSub.subject;
-
-       %first retrieve id of project 
-%        projectidx = handles.projectidx;
-        project = handles.record.project;
-        projectidx = mysql(['SELECT idx FROM projects WHERE projectid = "' project '"' ] );
+        subjects = handles.VC.subjects;
+        if ~any(matches(subjects, subject))
         
-        if isempty(subidx) %subject does not exist in database
-            QUERY = ['INSERT INTO subjects '  ...
-                '(subjectid, species, sex, genotype) ' ...
-                'VALUES( "' subject '" , "' ObjSub.species '" , "' ObjSub.sex '" , "' ObjSub.genotype '");' ];    
+            Ln = length(subjects);
+            handles.VC.subjects{Ln+1} = subject;
+            set(handles.e_subject, 'string', handles.VC.subjects )
+            set(handles.e_subject, 'Value', Ln+1)
+            set(handles.e_subject, 'Enable', 'on')
+            handles.record.subject = subject;
+
+           %first retrieve id of project 
+    %        projectidx = handles.projectidx;
+            project = handles.record.project;
+            projectidx = mysql(['SELECT idx FROM projects WHERE projectid = "' project '"' ] );
+            subidx = mysql(['SELECT idx FROM subjects WHERE subjectid = "' subject '"' ] );
+
+            if isempty(subidx) %subject does not exist in database
+                QUERY = ['INSERT INTO subjects '  ...
+                    '(subjectid, species, sex, genotype) ' ...
+                    'VALUES( "' subject '" , "' ObjSub.species '" , "' ObjSub.sex '" , "' ObjSub.genotype '");' ];    
+                mysql(QUERY);
+
+                subidx = mysql(['SELECT idx FROM subjects WHERE subjectid = "' subject '"' ] ); %SUBJECTS are unique       
+            end
+
+            QUERY = ['INSERT INTO projects_subjects (project, projectidx, subject, subjectidx) '...
+                     'VALUES( "' project '" , ' projectidx{1} ', "' subject '", ' subidx{1} ' )'];     
             mysql(QUERY);
-
-            subidx = mysql(['SELECT idx FROM subjects WHERE subjectid = "' subject '"' ] ); %SUBJECTS are unique       
+            guidata(hObject, handles);
         end
-
-        QUERY = ['INSERT INTO projects_subjects (project, projectidx, subject, subjectidx) '...
-                 'VALUES( "' project '" , ' projectidx{1} ', "' subject '", ' subidx{1} ' )'];     
-        mysql(QUERY);
-        guidata(hObject, handles);
     end
 end
      mysql('close'); 
