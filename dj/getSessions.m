@@ -43,6 +43,10 @@ Database = dbpar.Database;  %= yourlab
 query = eval([Database '.Sessions']);
 
 Sessions = fetch(query & strSel, 'project', 'dataset', 'subject', 'excond', 'stimulus', 'date', 'sessionid', 'url', 'setup', 'server');
+
+if isempty(Sessions)
+    return
+end
 %converts from linux path to path of user system
 urls = arrayfun(@geturl, Sessions, 'UniformOutput', false);
 urls =  fileparts(urls);

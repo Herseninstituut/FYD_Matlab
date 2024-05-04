@@ -1,9 +1,16 @@
-function [metadata, Okay] = get_metadata(sessionid)
+function [metadata, Okay] = getMetadata(sessionid)
 % Get neccessary metadata, this contains references to other tables in FYD
 % to run this function you will need FYD2BIDS
 % Chris van der Togt
+    metadata = [];
+    Okay = false;
     
     sess_meta = getSessions(sessionid=sessionid); % metadata in JSON files and in Sessions table
+    if isempty(sess_meta)
+        disp('ERROR: invalid sessionid')
+        return
+    end
+    
     project = sess_meta.project;
     dataset = sess_meta.dataset;
     subject = sess_meta.subject;
@@ -21,7 +28,12 @@ function [metadata, Okay] = get_metadata(sessionid)
     check_entries(subject_meta, 'subject_meta')
     
     setup_meta = getSetup(setup);
-    check_entries(setup_meta, 'setup_meta')
+    if ~isempty(setup_meta)
+        check_entries(setup_meta, 'setup_meta')
+    else 
+        disp('ERROR: No setup metadata, aborting.')
+        return
+    end
     
     metadata = struct('sess_meta', sess_meta, 'dataset_meta', dataset_meta, ...
                        'stim_meta', stim_meta, 'subject_meta', subject_meta, ...
