@@ -1,0 +1,22 @@
+Get a credentials file and place in this folder
+
+The datajoint table templates to access your labs database are in the +yourlab folder.
+Change the name of the +yourlab folder to be one of;
+
++dezeeuwlab
++heimellab
++huitingalab
++kalsbeeklab
++kolelab
++leveltlab
++lohmannlab
++roelfsemalab
++saltalab
++siclarilab
++socialbrainlab
++vansomerenlab
++verhagenlab
++willuhnlab
+
+In this folder, replace yourlab with the approriate name in the getSchema  and Sessions mfile.
+

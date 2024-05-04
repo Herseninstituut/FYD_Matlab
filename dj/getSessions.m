@@ -1,6 +1,11 @@
 function Sessions = getSessions(varargin)
+% urls = getSessions(project='someProject', subject='aSubject')
+
+%Database access with Datajoint
+global dbpar
 
  p = inputParser;
+ addOptional(p,'sessionid','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
  addOptional(p,'project','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
  addOptional(p,'dataset','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
  addOptional(p,'excond','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
@@ -34,26 +39,23 @@ if isempty(strSel)
     return
 end
 
-% import credentials
-dbpar = nhi_fyd_MVPparms();
+Database = dbpar.Database;  %= yourlab
+query = eval([Database '.Sessions']);
 
-setenv('DJ_HOST', dbpar.Server)
-setenv('DJ_USER', dbpar.User)
-setenv('DJ_PASS', dbpar.Passw)
-
-Con = dj.conn();
-
-query = leveltlab.Sessions;
-
-Sessions = fetch(query & strSel, 'dataset', 'subject', 'excond', 'stimulus', 'date', 'sessionid', 'url', 'server');
+Sessions = fetch(query & strSel, 'project', 'dataset', 'subject', 'excond', 'stimulus', 'date', 'sessionid', 'url', 'setup', 'server');
+%converts from linux path to path of user system
 urls = arrayfun(@geturl, Sessions, 'UniformOutput', false);
 urls =  fileparts(urls);
-for i = 1:length(Sessions)
- Sessions(i).url = urls{i};
+
+if length(Sessions) > 1
+    for i = 1:length(Sessions)
+     Sessions(i).url = urls{i};
+    end
+else
+    Sessions.url = urls;
 end
 
 %Sessions = rmfield(Sessions, 'idx');
-Sessions = rmfield(Sessions, 'server');
 end
 
 function url = geturl(obj)

@@ -1,6 +1,6 @@
 %{
 # subjects
-subjectid : varchar(30)      # unique name
+subjectid : varchar(50)      # unique name
 species : varchar(10) 
 projectidx : int(3)
 ---

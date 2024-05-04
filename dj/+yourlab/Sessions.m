@@ -5,15 +5,15 @@ url                         : varchar(250)                  #
 server                      : varchar(20)                   # 
 ---
 idx : int(11) autoincrement
--> leveltlab.Projects
--> leveltlab.Datasets
--> leveltlab.Subjects
--> leveltlab.Stimulus
--> leveltlab.Conditions
--> leveltlab.Setups
+-> yourlab.Projects
+-> yourlab.Datasets
+-> yourlab.Subjects
+-> yourlab.Stimulus
+-> yourlab.Conditions
+-> yourlab.Setups
 date : date
 logfile : varchar(50)
--> leveltlab.Researcher
+-> yourlab.Researcher
 %}
 
 classdef Sessions < dj.Manual
