@@ -1,20 +1,7 @@
 
-setup/~WRL2573.tmp
-setup/~$lesystem indexing for dataset metadata.docx
 *.asv
-
-nhi_fyd_VCparms\.m
-par/
-python/__pycache__/Conn.cpython-37.pyc
-*.pyc
-python/.ipynb_checkpoints/saveJSON-checkpoint.ipynb
-python/__pycache__/getdbfields.cpython-36.pyc
-python/__pycache__/getdbfields.cpython-36.pyc
-python/__pycache__/getdbfields.cpython-36.pyc
-python/.ipynb_checkpoints/design-checkpoint.py
+/par
 fydcache.mat
-mysql/mysql.mexa64old
 *.mexw64
 *.mexw64
 *.mexa64
-/DJ/+roelfsemalab
