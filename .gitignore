@@ -6,4 +6,4 @@ fydcache.mat
 *.mexw64
 *.mexa64
 /DJ/+*
-dependent/fydsaved.mat
+fydsaved.mat
