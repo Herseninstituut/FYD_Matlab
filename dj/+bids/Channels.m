@@ -1,10 +1,9 @@
 %{
 # channels table for BIDS channels tsv
-  ---
   channel_id            : varchar(60)  # Unique identifier of the channel, only containing letters and numbers. 
-  subject               : varchar(50)  # Subject identifier
+  ---
+  subject               : varchar(50) not null  # Subject identifier
   contact_id            : varchar(30)  # The label must correspond to an entry in the _contacts.tsv or be n/a
-  system_id             : varchar(30)  # System identifier 
   type                  : varchar(30)  # Type of the channel, e.g. extracellular signal, intracellular signal, synchronization signal. 
   unit                  : varchar(30)  # Physical unit of the value represented in this channel, e.g. V for Volt,
   sampling_frequency    : float        # Sampling rate of the channel 
@@ -19,7 +18,7 @@
   gain                  : float        # Amplification factor applied from signal detection at the contact to the signal stored in the data file
   time_offset           : float        # Time shift between signal of this channel to a reference channel
   time_reference_channel: tinyint      # reference channel used for time alignment of signals
-  reference             : tinyint      # contact used as physical reference, 
+  reference             : tinyint      #  contact used as physical reference, 
   ground                : varchar(120) # information on the ground, e.g. chamber screw, head pos
   recording_mode        : varchar(60)  # RECOMMENDED for patch clamp datasets 
 %}
