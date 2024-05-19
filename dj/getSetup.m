@@ -13,8 +13,8 @@ if strcmp(metadata.type, 'ephys')
     Sel = ['recording_setup= "' setupname '"'];
     setup_meta = fetch(query & Sel, '*' );
     
-elseif strcmp(metadata.type, 'multi_photon')
-    query = bids.MultiPhoton;  %ephys table in bids general database
+elseif strcmp(metadata.type, 'ophys')
+    query = bids.Ophys;  %ephys table in bids general database
     Sel = ['recording_setup= "' setupname '"'];
     setup_meta = fetch(query & Sel, '*' );
     

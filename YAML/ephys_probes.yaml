@@ -1,0 +1,30 @@
+# Use this template to fit your needs you can comment any fields that you do not use.
+# The fields correspond with the fields in the bids probes table. //
+# See Examples_BIDS_Datajoint.m
+
+  probe_id: ''          # REQUIRED - A unique identifier of the probe
+  subject: ''           #Subject identifier
+  manufacturer: ''      # Manufacturer of the probes system 
+  manufacturers_model_name: ''
+  manufacturer_model_version: ''
+  device_serial_number: '' # The serial number of the probe 
+  probe_type: ''        # REQUIRED - The type of the probe
+  material: ''          # A textual description of the base material of the probe.
+  x: 0                  # probe  position along the global coordinate system x-axis.
+  y: 0                  # y-axis.
+  z: 0                  # z-axis.
+  width: 0              # Physical width of the probe (int - um)
+  height: 0             # Physical height of the probe (int - um)
+  depth: 0              # Physical depth of the probe (int - um)
+  dimension_unit: ''    # Units of the physical dimensions
+  contact_count: 0      # Number of miscellaneous analog contacts for auxiliary signals 
+  AlphaRotation: 0      # Euler angle in degree to match probe extension dimensions (width height depth) to global x y z coordinates.
+  BetaRotation: 0 
+  GammaRotation: 0
+  coordinate_reference_point: '' # Point of the probe that is described by the probe coordinates and on which the alpha beta and gamma rotations are applied
+  hemisphere: ''                 # Which brain hemisphere was the probe  located
+  AssociatedBrainRegion: ''      # An identifier of the associated brain region based on the Uberon (https:#obophenotype.github.io/uberon) ontology for  anatomical structures in animals. 
+  AssociatedBrainRegionId: ''    # The method used to identify the associated brain region
+  AssociatedBrainRegionQualityType: '' # The method used to identify the associated brain region 
+  location: ''                  # brain area 
+  reference_atlas: ''           # reference atlas used for associated brain region

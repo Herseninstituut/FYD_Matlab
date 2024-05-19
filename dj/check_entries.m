@@ -1,4 +1,5 @@
-function check_entries( metadata, name)
+function check_entries( metadata)
+    name = inputname(1);
     if isstruct(metadata)
         flds = fields(metadata);
         for i=1:length(flds)

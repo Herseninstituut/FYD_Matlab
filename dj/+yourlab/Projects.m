@@ -10,6 +10,7 @@ author=null		            : varchar(100)                  #
 entrydate 		            : timestamp
 status			            : tinyint(1)
 institution_name            : varchar(60)
+institution_adress          : varchar(60)
 department_name             : varchar(60)
 %}
 classdef Projects < dj.Manual

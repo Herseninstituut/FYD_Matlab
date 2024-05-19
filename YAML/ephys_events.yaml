@@ -1,0 +1,8 @@
+# Use this template to fit your needs you can comment any fields that you do not use.
+
+onset: 0        # Onset (in seconds) of the event measured from the beginning of the acquisition of the first data point stored in the corresponding task data file.
+duration: 0     # Duration of the event (measured from onset) in seconds. 
+trial_type: ''  # Primary categorisation of each trial to identify them as instances of the experimental conditions. 
+value: 0        # Marker value associated with the event (for example the value of a TTL trigger that was recorded at the onset of the event)
+response_time: 0 # Response time measured in seconds.
+stim_file: ''   # Represents the location of the stimulus file (such as an image video or audio file) presented at the given onset time. 

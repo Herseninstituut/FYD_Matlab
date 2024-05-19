@@ -28,7 +28,7 @@ end
 Database = dbpar.Database;  %= yourlab
 query = eval([Database '.Subjects']);
 
-subjects = fetch(query & strSel, 'species', 'genotype', 'sex', 'birthdate', 'shortdescr');
+subjects = fetch(query & strSel, 'species', 'genotype', 'sex', 'birthdate', 'age', 'location', 'hemisphere', 'shortdescr');
 
 
 

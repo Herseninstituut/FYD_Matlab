@@ -6,3 +6,5 @@ fydcache.mat
 *.mexw64
 *.mexa64
 fydsaved.mat
+/dj/+leveltlab
+/dj/+roelfsemalab

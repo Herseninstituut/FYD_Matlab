@@ -1,0 +1,34 @@
+
+ChannelType: 
+    enum: 
+        - EXT     # Extracellular neuronal recording.
+        - NT      # Intracellular neuronal recording.
+        - CAT     # Cell attached patch. A variation of the patch-clamp technique in which the cell membrane remains intact
+        - IOP     # Inside out patch. A variation of the patch-clamp technique in which a patch of membrane is excised and the cytosolic surface exposed.
+        - LP      # Loose patch. A variation of the patch-clamp technique involving a seal with low electrical resistance
+        - OOP     # Outside out patch. A variation of the patch-clamp technique in which a patch of membrane is excised and the external surface exposed.
+        - PP      # Perforated patch. A variation of the patch-clamp technique in which the cell membrane is perforated
+        - WCP     # Whole cell patch. A variation of the patch-clamp technique in which the patch is ruptured
+        - SYNC    # Signal used for synchronization between different recording systems / channels
+        - STIM    # Electrical stimulation
+        - EEG     # Electrode channel from electroencephalogram
+        - ECOG    # Electrode channel from electrocorticogram (intracranial)
+        - SEEG    # Electrode channel from stereo-electroencephalogram (intracranial)
+        - DBS     # Electrode channel from deep brain stimulation electrode (intracranial)
+        - VEOG    # Vertical EOG (electrooculogram)
+        - HEOG    # Horizontal EOG
+        - EOG     # Generic EOG channel if HEOG or VEOG information not available
+        - ECG     # ElectroCardioGram (heart)
+        - EMG     # ElectroMyoGram (muscle)
+        - TRIG    #System Triggers
+        - AUDIO   #Audio signal
+        - PD      # Photodiode
+        - EYEGAZE # Eye Tracker gaze
+        - PUPIL   # Eye Tracker pupil diameter
+        - BEH     # Behavioral signals
+        - MISC    # Miscellaneous
+        - SYSCLOCK # System time showing elapsed time since trial started
+        - ADC     # Analog to Digital input
+        - DAC     # Digital to Analog output
+        - REF     # Reference channel
+        - OTHER   # Any other type of channel
