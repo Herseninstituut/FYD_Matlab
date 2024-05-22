@@ -1,4 +1,5 @@
 # Use this template to fit your needs you can comment any fields that you do not use.
+  recording_setup: ''                   # Custom name of the DAQ system
   institution_name: 'Netherlands Institute For Neuroscience'
   institution_adress: 'Meibergdreef 47, 1047BA Amsterdam, the Netherlands'
   institution_department_name: ''
@@ -7,22 +8,21 @@
   manufacturer_model_version: ''        # Version of the DAQ System
   location: ''                          # The address at which the data is recorded 
   device_serial_number: ''              # The serial number of the components of the setup
-  recording_setup: ''                   # Custom name of the DAQ system
   software_name: ''                     # Software suite used for data acquisition
-  software_versions: ''                 # Manufacturers designation of the acquisition software	
-  creator: ''                           #  Name of the person who set up the system
+  software_versions: ''                 # Manufacturers designation of the acquisition software
+  creator: ''                           # Name of the person who set up the system
   maintainer: ''                        # Name of the person who maintains the system
-  software_filters: ''                  #REQUIRED - Object of temporal software filters applied or n/a if the data is not available. 
+  software_filters: ''                  # REQUIRED - Object of temporal software filters applied or n/a if the data is not available. 
   hardware_filters: ''                  # Object of temporal hardware filters applied or n/a
   power_line_frequency: ''              # REQUIRED - Frequency (in Hz) of the power line at the setup location
 
-  procedure: 
-    pharmaceuticals:                  # list of pharmaceuticals used during the recording
+  procedure:                           # 
+    pharmaceuticals:                   # list of pharmaceuticals used during the recording
       - pharmaceutical:  
           pharmaceutical_name: '' 
           pharmaceutical_dose_amount: '' 
           pharmaceutical_dose_unit: '' 
-          pharmaceutical_dose_regimen: ''
+          pharmaceutical_dose_regiment: ''
           pharmaceutical_dose_time: '' 
   
   supplementary_signals: ''           # Additional modalities that were recorded in parallel and are also stored in the data file
@@ -39,6 +39,6 @@
   task_description: ''
   instructions: ''
 
-  sampling_frequency: 0              #REQUIRED - Internal (maximum) sampling frequency of the recording
-  sampling_frequency_unit: ''        # Unit of the SamplingFrequency. I
+  sampling_frequency: 0               # REQUIRED - Internal (maximum) sampling frequency of the recording
+  sampling_frequency_unit: ''         # Unit of the SamplingFrequency. I
   recording_duration: ''

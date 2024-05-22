@@ -15,6 +15,8 @@
     laser_pulse_frequency           : varchar(45)
     indicator                       : varchan(45)
     emission_wave_length            : varchar(45)
+    image_processing_toolbox        : varchar(45)
+    image_processing_toolbox_version : varchar(10)
 %}
 
 classdef Ophys < dj.Manual

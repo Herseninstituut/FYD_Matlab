@@ -27,6 +27,8 @@
   sampling_frequency: 0       #frame rate
   recording_duration: 0 
   number_of_frames: 0
+  image_processing_toolbox: ''       # What software tool was used to process the images
+  image_processing_toolbox_version: '' # Version
   location: ''              # Which brain region
   hemisphere: ''            # l, r or (u)ndefined
   task_name: ''             # Stimulus name

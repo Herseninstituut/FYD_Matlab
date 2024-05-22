@@ -58,8 +58,10 @@ function [metadata, Okay] = getMetadata(sessionid)
                 if isfield(dataset_meta, flds{i}), ephys.(flds{i}) = dataset_meta.(flds{i}); end
                 if isfield(task_meta, flds{i}), ephys.(flds{i}) = task_meta.(flds{i}); end
                 if isfield(subject_meta, flds{i}), ephys.(flds{i}) = subject_meta.(flds{i}); end
-            end          
-            
+            end  
+            % these are retrieved from the template
+            metadata.dataset_meta.institution_name = ephys.institution_name;
+            metadata.dataset_meta.institution_adress = ephys.institution_adress;
 
             key = ['subject="', subject,'"'];
             probe_meta = fetch(bids.Probes & key, '*'); % '*' -> retrieve all fields
@@ -95,6 +97,9 @@ function [metadata, Okay] = getMetadata(sessionid)
                 if isfield(dataset_meta, flds{i}), ophys.(flds{i}) = dataset_meta.(flds{i}); end
                 if isfield(task_meta, flds{i}), ophys.(flds{i}) = task_meta.(flds{i}); end
             end
+            % these are retrieved from the template
+            metadata.dataset_meta.institution_name = ophys.institution_name;
+            metadata.dataset_meta.institution_adress = ophys.institution_adress;
             
             filepath = fullfile(sess_meta.url, sess_meta.sessionid);
             if isfile([filepath '_normcorr.sbx']) 
@@ -138,11 +143,11 @@ function [metadata, Okay] = getMetadata(sessionid)
                      end
                  end
                 
-                event_meta = struct();
+                events = struct();
                 task_events = struct( 'time', framevents * Tframe + info.line * Tline, 'event_id', info.event_id);
                 %path_evts = fullfile(sess_meta.url, [sess_meta.sessionid '_events.mat']);
                 %save(path_evts, 'task_events')  
-                event_meta.task_events = struct2table(task_events);
+                events.task_events = struct2table(task_events);
           
                 ophys.number_of_trials = sum(task_events.event_id == 1);
                 ophys.task_name = task_meta.task_name;
@@ -169,7 +174,7 @@ function [metadata, Okay] = getMetadata(sessionid)
 
                         circumference = 2*pi*10; % in cm
                         Speed = circumference * double(quad)/1000; % in cm/s
-                        event_meta.run_events = struct2table(struct( 'speed', Speed(:), 'time', Times(:)));
+                        events.run_events = struct2table(struct( 'speed', Speed(:), 'time', Times(:)));
                         %save(path_evts, 'run_events', '-append')  
                     end
                     clear quad
@@ -182,7 +187,7 @@ function [metadata, Okay] = getMetadata(sessionid)
                 if isfile(path_eye)
                     pupil = load(path_eye, 'eye', 'time');
                     if isfield(pupil, 'eye')
-                       event_meta.pupil_events = struct2table(pupil); 
+                       events.pupil_events = struct2table(pupil); 
                       % save(path_evts, 'pupil_events', '-append') 
                        clear pupil
                     else
@@ -191,11 +196,30 @@ function [metadata, Okay] = getMetadata(sessionid)
                 end
                 
 
-                metadata.event_meta = event_meta;
-%                 path_evts = fullfile(sess_meta.url, [sess_meta.sessionid '_events.tsv']);
-%                  writetable(task_events, path_evts, ...
-%                 'FileType', 'text', ...
-%                 'Delimiter', '\t');
+                metadata.event_tbl = events;
+
+               % get ROI metadata; What software was used to process the 2p
+               % data; Suit2p, SpecSeg, ...
+               switch  lower(ophys.image_processing_toolbox)
+                   case 'specseg'  % Then this session should contain a SPSIG file
+                       if isfile([filepath '_SPSIG.mat'])
+                           spsig = load([filepath '_SPSIG.mat'], 'Mask', 'frameTimes', 'sigCorrected');
+                           if isempty(spsig.frameTimes) || isempty(spsig.sigCorrected) 
+                               disp('WARNING:: Missing ROI data, please run retrievesignals on this SPSIG file.')
+                           end
+                           metadata.ROIdata = spsig;
+                       else 
+                           disp('NO SPSIG file for this session, Please add or run the SpecSeg pipeline to generate this file')
+                           return
+                       end
+                       
+                   case ''
+                       disp('Missing imaging_processing_toolbox in the metadata for this setup')
+                   
+                   otherwise
+                       disp('This image processing toobox is not yet implemented!')
+               end
+                    
                 
             else
                 disp('sbx file does not exist, cannot retrieve metadata from file.')
