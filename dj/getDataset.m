@@ -14,11 +14,9 @@ dataset_meta = fetch(query & dsetSel, 'shortdescr', 'longdescr');
 
 query = eval([Database '.Projects']);
 projSel = ['projectid= "' project '"'];
-proj_meta = fetch(query & projSel, 'author', 'shortdescr', 'longdescr', 'institution_name', 'institution_adress', 'department_name');
+proj_meta = fetch(query & projSel, 'author', 'shortdescr', 'longdescr', 'department_name');
 
 dataset_meta.author = proj_meta.author;
-dataset_meta.institution_name = proj_meta.institution_name; 
-dataset_meta.institution_adress = proj_meta.institution_adress; 
 dataset_meta.institution_department_name = proj_meta.department_name;
 
 % if values for short and long description are empty 

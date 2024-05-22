@@ -1,6 +1,6 @@
 # Use this template to fit your needs you can comment any fields that you do not use.
-  institution_name: ''
-  institution_adress: ''
+  institution_name: 'Netherlands Institute For Neuroscience'
+  institution_adress: 'Meibergdreef 47, 1047BA Amsterdam, the Netherlands'
   institution_department_name: ''
   manufacturer: ''                      # Manufacturer of the ephys system 
   manufacturers_model_name: ''          # Name of the DAQ System used
