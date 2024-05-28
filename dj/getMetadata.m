@@ -41,6 +41,14 @@ function [metadata, Okay] = getMetadata(sessionid)
         return
     end
     
+    %Is there extra metadata from the original json file
+    fpjson = fullfile(sess_meta.url, [sess_meta.sessionid '_session.json']);
+    txt_json = fileread(fpjson);
+    J_meta = jsondecode(txt_json);
+    if isfield(J_meta, 'display') % runexperiment always saves the display parameters!!
+        setup_meta.display = J_meta.display;        
+    end
+    
     metadata = struct('sess_meta', sess_meta, 'dataset_meta', dataset_meta, ...
                        'task_meta', task_meta, 'subject_meta', subject_meta, ...
                        'setup_meta', setup_meta );
@@ -89,7 +97,12 @@ function [metadata, Okay] = getMetadata(sessionid)
             metadata.ephys = ephys;
 
         case 'ophys'  %see template_ophys.yaml
+            % This case is for all optical physiological datasets, 2
+            % photon, wide field, miniscope etc.
             
+            %First a yaml file is imported with all necessary fields, and
+            %these will be filled in from the FYD database, using the
+            %collected general metadata associated with this sessionid.
             ophys = yaml.loadFile('template_ophys.yaml');
             flds = fields(ophys);
             for i = 1:length(flds)
@@ -101,132 +114,21 @@ function [metadata, Okay] = getMetadata(sessionid)
             metadata.dataset_meta.institution_name = ophys.institution_name;
             metadata.dataset_meta.institution_adress = ophys.institution_adress;
             
-            filepath = fullfile(sess_meta.url, sess_meta.sessionid);
-            if isfile([filepath '_normcorr.sbx']) 
-                filepath = [filepath '_normcorr'];
-            end
-            if isfile([filepath '.sbx'])
-                global info
-                sbxread(filepath, 0, 0);
-                scanmode = info.scanmode;
-                if scanmode == 1
-                    ophys.image_acquisition_protocol = 'unidirectional';
-                    Tline = 1.0/info.resfreq; %unidirectinal
-                    Tframe = 512/info.resfreq; %frame time in both cases is rows/resonance freq
-                else 
-                    ophys.image_acquisition_protocol = 'bidirectional';
-                    scanmode = 2;
-                    Tline = 0.5/info.resfreq; %bidirectional,
-                    Tframe = 256/info.resfreq;            
-                end
-               % dims = [info.Shape(1), info.Shape(2), info.max_idx];
-                ophys.laser_excitation_wave_length = [num2str(info.config.wavelength) 'nm'];
-                ophys.sampling_frequency = info.resfreq * scanmode /(info.Shape(2) * info.Shape(3));
-                ophys.pixel_dimensions = num2str([info.Shape(1) info.Shape(2)]);
-                ophys.channels = info.Shape(3);
-                ophys.recording_duration = [num2str(ceil(info.max_idx / ophys.sampling_frequency)) 's'];
-                ophys.number_of_frames = info.max_idx;
-                ophys.objective = info.objective;
-                ophys.numerical_aperture = 0.8;
-                ophys.magnification = info.config.magnification;
-                ophys.firmware = info.firmware;
-                ophys.scanning_frequency = [num2str(info.resfreq) 'Hz'];
-                
-                %There is a problem with the frame events from the
-                %Neurolabware system, in that their numbers fold back to
-                %zero after uint16 max (65535)
-                framevents = info.frame;
-                ix = find(diff(framevents) < 0); 
-                 if ~isempty(ix)
-                     for i=1:length(ix)
-                         framevents(ix(i)+1:end) = framevents(ix(i)+1:end) + 65535;
-                     end
-                 end
-                
-                events = struct();
-                task_events = struct( 'time', framevents * Tframe + info.line * Tline, 'event_id', info.event_id);
-                %path_evts = fullfile(sess_meta.url, [sess_meta.sessionid '_events.mat']);
-                %save(path_evts, 'task_events')  
-                events.task_events = struct2table(task_events);
-          
-                ophys.number_of_trials = sum(task_events.event_id == 1);
-                ophys.task_name = task_meta.task_name;
-                ophys.task_description = task_meta.task_description;
-                
-
-                path_ophys = fullfile(sess_meta.url, [sess_meta.sessionid '_ophys.json']);
-                f = fopen(path_ophys, 'w' ); 
-                txtO = jsonencode(ophys);
-                fwrite(f, txtO);
-                fclose(f);
-                metadata.ophys = ophys;
-                
-                %Is there a running record ?
-                path_quad = fullfile(sess_meta.url, [sess_meta.sessionid '_quadrature.mat']);
-                if isfile(path_quad)
-                    quad = load(path_quad); %loads quad_data!
-                    if isfield(quad, 'quad_data')
-                        quad = quad.quad_data;
-                        Times = (1:length(quad))'*Tframe;
-                        quad(quad < 0) = 0; %get rid of negative artifacts
-                        % See sbxgettimeinfo; this is rather arbitrary:
-                        % what arduino script was used to record this?
-
-                        circumference = 2*pi*10; % in cm
-                        Speed = circumference * double(quad)/1000; % in cm/s
-                        events.run_events = struct2table(struct( 'speed', Speed(:), 'time', Times(:)));
-                        %save(path_evts, 'run_events', '-append')  
-                    end
-                    clear quad
-                else
-                    disp('Warning: No running record'); 
-                end
-                
-                %Is there an eye position / pupil record
-                path_eye = fullfile(sess_meta.url, [sess_meta.sessionid '_eye.mat']);
-                if isfile(path_eye)
-                    pupil = load(path_eye, 'eye', 'time');
-                    if isfield(pupil, 'eye')
-                       events.pupil_events = struct2table(pupil); 
-                      % save(path_evts, 'pupil_events', '-append') 
-                       clear pupil
-                    else
-                        disp("WARNING: No eye recording to add")
-                    end
-                end
-                
-
-                metadata.event_tbl = events;
-
-               % get ROI metadata; What software was used to process the 2p
-               % data; Suit2p, SpecSeg, ...
-               switch  lower(ophys.image_processing_toolbox)
-                   case 'specseg'  % Then this session should contain a SPSIG file
-                       if isfile([filepath '_SPSIG.mat'])
-                           spsig = load([filepath '_SPSIG.mat'], 'Mask', 'frameTimes', 'sigCorrected');
-                           if isempty(spsig.frameTimes) || isempty(spsig.sigCorrected) 
-                               disp('WARNING:: Missing ROI data, please run retrievesignals on this SPSIG file.')
-                           end
-                           metadata.ROIdata = spsig;
-                       else 
-                           disp('NO SPSIG file for this session, Please add or run the SpecSeg pipeline to generate this file')
-                           return
-                       end
-                       
-                   case ''
-                       disp('Missing imaging_processing_toolbox in the metadata for this setup')
-                   
-                   otherwise
-                       disp('This image processing toobox is not yet implemented!')
-               end
-                    
-                
-            else
-                disp('sbx file does not exist, cannot retrieve metadata from file.')
-                return
-            end
+            filepath = fullfile(sess_meta.url, sess_meta.sessionid); 
             
-        
+            % Now that we have the general lmetadata we need to retrieve
+            % data specifically associated with the recording method used.
+            
+            switch lower(ophys.manufacturer)
+                
+                case 'neurolabware'
+                    metadata = neurolabware(filepath, ophys, metadata);
+                
+                otherwise 
+                    disp('ERROR: Unknown optical recording system')
+                    
+            end  % What optical recording setup ws used
+                   
         otherwise
             disp('Unkown setup type; Please enter setup metadata.')
     end
