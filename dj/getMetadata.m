@@ -2,6 +2,8 @@ function [metadata, Okay] = getMetadata(sessionid)
 % Get neccessary metadata, this contains references to other tables in FYD
 % to run this function you will need FYD2BIDS
 % Chris van der Togt
+
+
     metadata = [];
     Okay = false;
     
