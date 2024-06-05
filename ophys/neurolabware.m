@@ -8,6 +8,7 @@ fnNormcorr = [filepath '_normcorr']; % registered imaging movie
 if ~isfile([fnNormcorr '.sbx']) 
     disp('ERROR: no _normcorr.sbx file present in this folder. You will not be able to add image data to your NWB file.')
 end
+
 if isfile([filepath '.sbx'])
 
     sbxread(filepath, 0, 0);
@@ -108,8 +109,6 @@ if isfile([filepath '.sbx'])
             path_log = fullfile(sess_meta.url, [sess_meta.sessionid '_log.mat']);
             save(path_log, 'Parameters', 'log')  
         end   
-        if ismember('pupil', variableInfo)
-            fm = load(path_facemap, 'pupil');
         if ismember('pupil', variableInfo)
             fm = load(path_facemap, 'pupil');
             pupil = fm.pupil{1};
