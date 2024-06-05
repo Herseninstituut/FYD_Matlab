@@ -6,7 +6,7 @@ fnNormcorr = [filepath '_normcorr']; % registered imaging movie
 
 
 if ~isfile([fnNormcorr '.sbx']) 
-    disp('ERROR: Normcorr.sbx file is not present in this folder.')
+    disp('ERROR: no _normcorr.sbx file present in this folder. You will not be able to add image data to your NWB file.')
 end
 if isfile([filepath '.sbx'])
 
@@ -110,9 +110,13 @@ if isfile([filepath '.sbx'])
         end   
         if ismember('pupil', variableInfo)
             fm = load(path_facemap, 'pupil');
+        if ismember('pupil', variableInfo)
+            fm = load(path_facemap, 'pupil');
             pupil = fm.pupil{1};
             struct_eye = struct('time', FrameTimes(:), 'Pos', pupil.com_smooth, 'Area', pupil.area_smooth(:));
             events.pupil_events = struct2table(struct_eye); 
+        else
+            disp("WARNING: No pupil recording in facemap file.")
         end
     else
         disp("WARNING: No eye recording to add")

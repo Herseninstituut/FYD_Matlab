@@ -56,11 +56,15 @@ function [metadata, Okay] = getMetadata(sessionid)
                        'setup_meta', setup_meta );
     Okay = true;
     
+    fprintf('All metadata retrieved from FYD database, please update invalid values \n\n');
+    
     %% Retrieve recording method metadata. This will be a combination of metadata
     % entered on the webapp and data retrieved from the recorded files.
     
     switch lower(setup_meta.type)
         case 'ephys' %this is an electrophysiology dataset
+            disp(['This is an electrophysiology dataset, using the ' setup ' setup.'])
+            
             ephys = yaml.loadFile('template_ephys.yaml');
             flds = fields(ephys);
             for i = 1:length(flds)
@@ -97,11 +101,13 @@ function [metadata, Okay] = getMetadata(sessionid)
             metadata.electrode_meta = electrode_meta;
             metadata.channel_meta = channel_meta;
             metadata.ephys = ephys;
+            fprintf('Done retrieving meta data for this sessionid: %s \n', sessionid);
 
+            
         case 'ophys'  %see template_ophys.yaml
             % This case is for all optical physiological datasets, 2
             % photon, wide field, miniscope etc.
-            
+            disp(['This is an optical physiology dataset, using the ' setup ' setup.'])
             %First a yaml file is imported with all necessary fields, and
             %these will be filled in from the FYD database, using the
             %collected general metadata associated with this sessionid.
@@ -124,8 +130,10 @@ function [metadata, Okay] = getMetadata(sessionid)
             switch lower(ophys.manufacturer)
                 
                 case 'neurolabware'
+                    fprintf('The setup uses a neurolabware device. \n\n')
                     metadata = neurolabware(filepath, ophys, metadata);
-                
+                    fprintf('Done retrieving meta data for this sessionid: %s \n', sessionid);
+                    
                 otherwise 
                     disp('ERROR: Unknown optical recording system')
                     
