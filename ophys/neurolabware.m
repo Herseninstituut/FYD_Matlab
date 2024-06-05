@@ -86,10 +86,12 @@ if isfile([filepath '.sbx'])
     %Is there an eye position / pupil record defined by _eye.mat
     path_eye = fullfile(sess_meta.url, [sess_meta.sessionid '_eye.mat']);
     path_facemap = fullfile(sess_meta.url, [sess_meta.sessionid '_proc.mat']);
+    
     if isfile(path_eye)
-        pupil = load(path_eye, 'eye', 'time');
-        if isfield(pupil, 'eye')
-           struct_eye = struct('time', pupil.time, 'Pos', pupil.eye.Pos(:,:), 'Area', pupil.eye.Area);
+        variableInfo = who('-file', path_eye);        
+        if ismember('eye', variableInfo) && ismember('time', variableInfo)
+           eye_rec = load(path_eye, 'eye', 'time');
+           struct_eye = struct('time', eye_rec.time, 'Pos', eye_rec.eye.Pos(:,:), 'Area', eye_rec.eye.Area);
            events.pupil_events = struct2table(struct_eye); 
           % save(path_evts, 'pupil_events', '-append') 
            clear pupil
@@ -97,15 +99,17 @@ if isfile([filepath '.sbx'])
             disp("WARNING: Eye recording invalid. Please extract eye position and area.")
         end
 
-    elseif isfile(path_facemap)  
-        fm = load(path_facemap, 'Parameters', 'log', 'pupil');
-        if isfield(fm, 'Parameters') && isfield(fm, 'log') 
+    elseif isfile(path_facemap)
+        variableInfo = who('-file', path_facemap);       
+        if ismember('Parameters', variableInfo) && ismember('log', variableInfo)
+            fm = load(path_facemap, 'Parameters', 'log');
             Parameters = fm.Parameters;
             log = fm.log;
             path_log = fullfile(sess_meta.url, [sess_meta.sessionid '_log.mat']);
             save(path_log, 'Parameters', 'log')  
         end   
-        if isfield(fm, 'pupil') 
+        if ismember('pupil', variableInfo)
+            fm = load(path_facemap, 'pupil');
             pupil = fm.pupil{1};
             struct_eye = struct('time', FrameTimes(:), 'Pos', pupil.com_smooth, 'Area', pupil.area_smooth(:));
             events.pupil_events = struct2table(struct_eye); 
