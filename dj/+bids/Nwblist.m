@@ -2,7 +2,7 @@
 # nwblist
 sessionid : varchar(60) 
 ---
-url : varchar(500)
+lab : varchar(60)
 status : enum('todo', 'doing', 'done')  
 %}
 
