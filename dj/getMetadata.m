@@ -68,10 +68,11 @@ function [metadata, Okay] = getMetadata(sessionid)
             ephys = yaml.loadFile('template_ephys.yaml');
             flds = fields(ephys);
             for i = 1:length(flds)
-                if isfield(setup_meta, flds{i}), ephys.(flds{i}) = setup_meta.(flds{i}); end
-                if isfield(dataset_meta, flds{i}), ephys.(flds{i}) = dataset_meta.(flds{i}); end
-                if isfield(task_meta, flds{i}), ephys.(flds{i}) = task_meta.(flds{i}); end
-                if isfield(subject_meta, flds{i}), ephys.(flds{i}) = subject_meta.(flds{i}); end
+                if isstring(ephys.(flds{i}) ), ephys.(flds{i}) = char(ephys.(flds{i})); end
+                if isfield(setup_meta, flds{i}), ephys.(flds{i}) = char(setup_meta.(flds{i})); end
+                if isfield(dataset_meta, flds{i}), ephys.(flds{i}) = char(dataset_meta.(flds{i})); end
+                if isfield(task_meta, flds{i}), ephys.(flds{i}) = char(task_meta.(flds{i})); end
+                if isfield(subject_meta, flds{i}), ephys.(flds{i}) = char(subject_meta.(flds{i})); end
             end  
             % these are retrieved from the template
             metadata.dataset_meta.institution_name = ephys.institution_name;
@@ -114,10 +115,12 @@ function [metadata, Okay] = getMetadata(sessionid)
             ophys = yaml.loadFile('template_ophys.yaml');
             flds = fields(ophys);
             for i = 1:length(flds)
-                if isfield(setup_meta, flds{i}), ophys.(flds{i}) = setup_meta.(flds{i}); end
-                if isfield(dataset_meta, flds{i}), ophys.(flds{i}) = dataset_meta.(flds{i}); end
-                if isfield(task_meta, flds{i}), ophys.(flds{i}) = task_meta.(flds{i}); end
+                if isstring(ophys.(flds{i}) ), ophys.(flds{i}) = char(ophys.(flds{i})); end
+                if isfield(setup_meta, flds{i}), ophys.(flds{i}) = char(setup_meta.(flds{i})); end
+                if isfield(dataset_meta, flds{i}), ophys.(flds{i}) = char(dataset_meta.(flds{i})); end
+                if isfield(task_meta, flds{i}), ophys.(flds{i}) = char(task_meta.(flds{i})); end
             end
+            
             % these are retrieved from the template
             metadata.dataset_meta.institution_name = ophys.institution_name;
             metadata.dataset_meta.institution_adress = ophys.institution_adress;

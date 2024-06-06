@@ -3,15 +3,12 @@ function metadata = neurolabware(filepath, ophys, metadata)
 global info                  
 
 fnNormcorr = [filepath '_normcorr']; % registered imaging movie
+% This sbx file is used since it is the basis of all further processing
+% and is most likely a cropped version of the original
 
+if isfile([fnNormcorr '.sbx'])
 
-if ~isfile([fnNormcorr '.sbx']) 
-    disp('ERROR: no _normcorr.sbx file present in this folder. You will not be able to add image data to your NWB file.')
-end
-
-if isfile([filepath '.sbx'])
-
-    sbxread(filepath, 0, 0);
+    sbxread(fnNormcorr, 0, 0);
     scanmode = info.scanmode;
     if scanmode == 1
         ophys.image_acquisition_protocol = 'unidirectional';
@@ -194,6 +191,7 @@ if isfile([filepath '.sbx'])
 
 else
     disp('sbx file does not exist, cannot retrieve metadata from file.')
+    disp('ERROR: no _normcorr.sbx file present in this folder. You will not be able to add image data to your NWB file.')
     return
 end
 
