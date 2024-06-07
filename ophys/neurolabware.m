@@ -21,7 +21,10 @@ if isfile([fnNormcorr '.sbx'])
         Tframe = 256/info.resfreq;            
     end
    % dims = [info.Shape(1), info.Shape(2), info.max_idx];
-    ophys.laser_excitation_wave_length = [num2str(info.config.wavelength) 'nm'];
+    ophys.software_version = info.scanbox_version;
+    ophys.firmware = info.firmware;
+    ophys.laser_excitation_wave_length = info.config.wavelength;
+   % ophys.emission_wave_lengths = 
     ophys.sampling_frequency = info.resfreq * scanmode /(info.Shape(2) * info.Shape(3));
     ophys.pixel_dimensions = num2str([info.Shape(1) info.Shape(2)]);
     ophys.channels = info.Shape(3);
@@ -31,7 +34,9 @@ if isfile([fnNormcorr '.sbx'])
     ophys.numerical_aperture = 0.8;
     ophys.magnification = info.config.magnification;
     ophys.firmware = info.firmware;
-    ophys.scanning_frequency = [num2str(info.resfreq) 'Hz'];
+    ophys.scanning_frequency = info.resfreq;
+    ophys.pmt_gain = [info.config.pmt0_gain info.config.pmt1_gain];
+    ophys.magnification = str2double(info.config.magnification_list(info.config.magnification, :));
 
     %There is a problem with the frame events from the
     %Neurolabware system, in that their numbers fold back to
