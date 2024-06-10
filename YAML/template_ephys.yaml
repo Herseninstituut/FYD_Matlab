@@ -14,8 +14,7 @@
   maintainer: ''                        # Name of the person who maintains the system
   software_filters: ''                  # REQUIRED - Object of temporal software filters applied or n/a if the data is not available. 
   hardware_filters: ''                  # Object of temporal hardware filters applied or n/a
-  power_line_frequency: ''              # REQUIRED - Frequency (in Hz) of the power line at the setup location
-
+  power_line_frequency: 0              # REQUIRED - Frequency (in Hz) of the power line at the setup location
   procedure:                           # 
     pharmaceuticals:                   # list of pharmaceuticals used during the recording
       - pharmaceutical:  

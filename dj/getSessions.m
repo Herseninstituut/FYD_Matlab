@@ -13,7 +13,8 @@ global dbpar
  addOptional(p,'stimulus','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
  addOptional(p,'setup','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
  addOptional(p,'date','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
-
+ addOptional(p,'server','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
+ addOptional(p,'investigator','-',@(x)validateattributes(x,{'char'},{'nonempty'}))
  
 if nargin == 0
      return
