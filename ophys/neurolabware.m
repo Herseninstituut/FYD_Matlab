@@ -2,7 +2,17 @@ function metadata = neurolabware(filepath, ophys, metadata)
 
 global info                  
 
-fnNormcorr = [filepath '_normcorr']; % registered imaging movie
+
+%fnNormcorr = [filepath '_normcorr']; % registered imaging movie
+fn = dir([filepath '*_normcorr.sbx']);
+if isempty(fn)
+    disp('_normcorr.sbx file does not exist, cannot retrieve metadata from file.')
+    return
+end
+[~, fnName] = fileparts(fn(1).name);
+fnNormcorr = fullfile(fn(1).folder, fnName);
+disp( ['File found: ' fnNormcorr] )
+
 % This sbx file is used since it is the basis of all further processing
 % and is most likely a cropped version of the original
 
@@ -114,7 +124,10 @@ if isfile([fnNormcorr '.sbx'])
         if ismember('pupil', variableInfo)
             fm = load(path_facemap, 'pupil');
             pupil = fm.pupil{1};
-            struct_eye = struct('time', FrameTimes(:), 'Pos', pupil.com_smooth, 'Area', pupil.area_smooth(:));
+            eye_pos = pupil.com_smooth;
+            eye_area = pupil.area_smooth(:);
+            ln = length(FrameTimes(:));
+            struct_eye = struct('time', FrameTimes(:), 'Pos', eye_pos(1:ln,:), 'Area', eye_area(1:ln));
             events.pupil_events = struct2table(struct_eye); 
         else
             disp("WARNING: No pupil recording in facemap file.")
