@@ -52,7 +52,7 @@ end
 urls = arrayfun(@geturl, Sessions, 'UniformOutput', false);
 urls =  fileparts(urls);
 
-if length(Sessions) > 1
+if iscell(urls)
     for i = 1:length(Sessions)
      Sessions(i).url = urls{i};
     end
