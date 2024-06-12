@@ -6,6 +6,16 @@ function Con = initDJ(lab)
 p = mfilename('fullpath');
 filepath = fileparts(p);
 
+% Get the parent directory => fyd_matlab and addpath relevent subdirectories
+cstr = strsplit(filepath, '\');
+ln = length(cstr);
+fyd_path = char(join(cstr(1:ln-1), '\'));
+addpath(fyd_path, ...
+        [fyd_path '\dj'], ...
+        [fyd_path '\ophys'], ...
+        [fyd_path '\par'], ...
+        [fyd_path '\YAML'] )
+
 %% Check if Datajoint schema exists for this lab, if not create.
 if ~exist(fullfile(filepath,['+' lab]), 'dir')
     % copy the yourlab template and rename yourlab in each text file
