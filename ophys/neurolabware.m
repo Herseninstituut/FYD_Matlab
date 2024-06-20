@@ -193,7 +193,7 @@ if isfile([fnNormcorr '.sbx'])
    switch  lower(ophys.image_processing_toolbox)
        case 'specseg'  % Then this session should contain a SPSIG file
            if isfile([fnNormcorr '_SPSIG.mat'])
-               spsig = load([fnNormcorr '_SPSIG.mat'], 'Mask', 'frameTimes', 'sigCorrected');
+               spsig = load([fnNormcorr '_SPSIG.mat'], 'Mask', 'frameTimes', 'sigCorrected', 'sigraw', 'sigBack', 'PP', 'BImgMax', 'BImgAverage', 'SPic', 'Sax');
                if ~(isfield(spsig, 'Mask') && isfield(spsig, 'sigCorrected'))
                    disp('WARNING:: Missing ROI data, please run retrievesignals on this SPSIG file.')
                end
