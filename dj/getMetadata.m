@@ -30,6 +30,20 @@ function [metadata, Okay] = getMetadata(sessionid)
     sub_meta = getSubjects(subject); % multiple subjects as cell array
     check_entries(sub_meta)
     flds = fields(subject_meta);
+    
+    %Conform to international binomial form
+    switch sub_meta.species
+        case 'mouse'
+            sub_meta.species = 'Mus musculus';
+        case 'rat'
+            sub_meta.species = 'Rattus norvegicus';
+        case 'monkey'
+            sub_meta.species = 'Macaca mulatta';
+        case 'human'
+            sub_meta.species = 'Homo sapiens';
+        otherwise
+            sub_meta.species = 'unknown';
+    end
     for i = 1:length(flds)
         if isfield(sub_meta, flds{i}), subject_meta.(flds{i}) = sub_meta.(flds{i}); end
     end     
@@ -127,11 +141,13 @@ function [metadata, Okay] = getMetadata(sessionid)
                     ophys.(flds{i}) = char(ophys.(flds{i})); 
                     if isfield(setup_meta, flds{i}), ophys.(flds{i}) = char(setup_meta.(flds{i})); end
                     if isfield(dataset_meta, flds{i}), ophys.(flds{i}) = char(dataset_meta.(flds{i})); end
-                    if isfield(task_meta, flds{i}), ophys.(flds{i}) = char(task_meta.(flds{i})); end    
+                    if isfield(task_meta, flds{i}), ophys.(flds{i}) = char(task_meta.(flds{i})); end  
+                    if isfield(subject_meta, flds{i}), ophys.(flds{i}) = char(subject_meta.(flds{i})); end    
                 else
                     if isfield(setup_meta, flds{i}), ophys.(flds{i}) = setup_meta.(flds{i}); end
                     if isfield(dataset_meta, flds{i}), ophys.(flds{i}) = dataset_meta.(flds{i}); end
-                    if isfield(task_meta, flds{i}), ophys.(flds{i}) = task_meta.(flds{i}); end                     
+                    if isfield(task_meta, flds{i}), ophys.(flds{i}) = task_meta.(flds{i}); end    
+                    if isfield(subject_meta, flds{i}), ophys.(flds{i}) = char(subject_meta.(flds{i})); end    
                 end
 
             end

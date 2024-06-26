@@ -141,7 +141,9 @@ if isfile([fnNormcorr '.sbx'])
     end
 
     % Trial events and their identity which depends on the task
-    path_log = fullfile(sess_meta.url, [sess_meta.sessionid '_log.mat']);   
+    path_log = fullfile(sess_meta.url, [sess_meta.sessionid '_log.mat']);  
+    
+    %Frame events onset from frame 0 or frame 1 !!!
     trial_onsets = framevents(info.event_id==1) * Tframe + info.line(info.event_id==1) * Tline;
     % other_events = framevents(info.event_id==2) * Tframe + info.line(info.event_id==2) * Tline;
     events.task_events = table;

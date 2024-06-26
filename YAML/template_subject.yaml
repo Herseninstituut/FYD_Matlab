@@ -1,7 +1,7 @@
-birthdate: ''
-age_reference: 'unknown'
+birthdate: ''  # datetime object
+age_reference: 'birth'  # Should be 'birth' or 'gestational'
 genotype: ''
-sex: ''
+sex: ''                 # 'm', 'f', 'u'
 species: ''
 strain: ''
 subjectid: ''
