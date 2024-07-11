@@ -61,8 +61,6 @@ writetable(ChannelTbl, fullfile(temp_folder, 'channels.tsv'), ...
        'FileType', 'text', ...
        'Delimiter', '\t');
  
-   
-  
 %% Structure template to create BIDS electrodes columns %%%%%%%%%%%%%%%%%%%%%
 
 % contactsJson = get_json_template('ephys_contacts.jsonc');
