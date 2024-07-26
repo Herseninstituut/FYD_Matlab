@@ -81,11 +81,11 @@ if isfile([fnNormcorr '.sbx'])
             quad = quad.quad_data;
             Times = (1:length(quad))'*Tframe;
             quad(quad < 0) = 0; %get rid of negative artifacts
-% See sbxgettimeinfo; this is rather arbitrary:
-% what arduino script was used to record this?
+        % See sbxgettimeinfo; this is rather arbitrary:
+        % what arduino script was used to record this? >> msensorspeed
 
-            circumference = 2*pi*10; % in cm
-            Speed = circumference * double(quad)/1000; % in cm/s
+            circumference = 2*pi*8.5; % in cm with a radius of 8.5 cm
+            Speed = circumference * double(quad) / 1024; % in increments/s, msensorspeed wheel has 1024 increments per rotation
             events.run_events = struct2table(struct( 'speed', Speed(:), 'time', Times(:)));
             %save(path_evts, 'run_events', '-append') 
         else
