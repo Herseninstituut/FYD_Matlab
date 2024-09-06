@@ -35,7 +35,7 @@ if isfile([fnNormcorr '.sbx'])
     ophys.firmware = info.firmware;
     ophys.laser_excitation_wave_length = info.config.wavelength;
    % ophys.emission_wave_lengths = 
-    ophys.sampling_frequency = info.resfreq * scanmode /(info.Shape(2) * info.Shape(3));
+    ophys.sampling_frequency = 1/Tframe;
     ophys.pixel_dimensions = num2str([info.Shape(1) info.Shape(2)]);
     ophys.channels = info.Shape(3);
     ophys.recording_duration = [num2str(ceil(info.max_idx / ophys.sampling_frequency)) 's'];
@@ -147,7 +147,7 @@ if isfile([fnNormcorr '.sbx'])
     trial_onsets = framevents(info.event_id==1) * Tframe + info.line(info.event_id==1) * Tline;
     % other_events = framevents(info.event_id==2) * Tframe + info.line(info.event_id==2) * Tline;
     events.task_events = table;
-    events.task_events.times = trial_onsets;
+    events.task_events.time = trial_onsets;
     
     
     if isfile(path_log)
