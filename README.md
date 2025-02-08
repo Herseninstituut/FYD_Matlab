@@ -106,7 +106,7 @@ L5_Tuftapicsoma
 				Pollux_20200323_003_session.json
 ~~~
 
-If you have ordered you data this way, you can now make an excel sheet with the neccessary metadata to automatically generate the json files at the appropriate locations. jsontemplate.xlsl contains columns for each required field.  
+Whether you have ordered your data this way or not, make an excel sheet with the neccessary metadata to automatically generate the json files at the appropriate locations. jsontemplate.xlsl contains columns for each required field.  
 
 <img src=/images/excel.png >
 
@@ -114,24 +114,17 @@ When your list is complete, generate the json files with : **Generatejsonfiles.m
 
 ***
 ## Find and Retrieve urls
-A simple way to retrieve the urls for the data you want to access, you can use this function with search criteria.  
-``` urls = getSessions(project='someProject', subject='aSubject') ```  
-In any combination, you can use the following search fields ; project, dataset, excond, subject, stimulus, setup, date
+In the background getFYD and getdbfields use mysql.mexw64, This is Microsoft visual studio compiled C code to a matlab mex function.
+Examples of it's use can be found in getdbfields;
+    dgc = mysql('open', dbpar.Server, dbpar.User, dbpar.Passw);
+    dbdb = mysql('use', dbpar.Database);  
+    projects = mysql('SELECT projectid FROM projects');
+mysql can be called with standard sql queries.
 
-Alternatively, you can use **callfydAccess.m**. Once you have filled in your search criteria press display to retrieve a list of files, associated with each json file in a selectable tree-view. Just as with the windows search bar, you can select file types with (\*) as a wild card character. nb. this can take quite a while to finish!
-```urls = callfydAccess();```
-<img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/images/fydAccess.png" height="300" >
-Select all or just a few checkboxes to retrieve the urls of interest. After pressing save&close a list of urls is returned:  
+(Matlab has its own mysql client since 2020, which can also be used to access a mysql database but its usage differs from this implementation.)
 
-~~~
-{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001.mat'				} 
-{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_Bh.mat'			} 
-{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase.mat' 	}   
-{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase_1sNL.mat'}   
-{'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_1_log.mat'                           } 
-~~~
-
-### dj (Datajoint) 
+### Using Datajoint (dj) to acess and retrieve metadata
+Datajoint makes it a lot easier to access and retrieve data from the FYD database.
 use [datajoint](https://docs.datajoint.io/)
 Datajoint is an addon in matlab and a module in python. In matlab, go to APPS, select 'Get more Apps'. Search for Datajoint, add.
 
@@ -143,16 +136,19 @@ You may enter a vlaid name but still get an error because you do not have a cred
 The first time you run initDJ it will create a schema for your lab. DJ requires a class folder with table definitions (an example, +yourlab, is included).  
 
 When you get a successful connection we can start using it.
-testexample.m shows how to use datajoint in connection with the FYD database to make an updatable spreadsheet with a few lines of code.  
-~~~
-setenvdj    %set environment credentials for MySql database
-populate(shared.Example) %update table of records with specific characteristics
-~~~
-Once you have defined a table (see example.m in the +shared folder) it is easy to update this table as new data arrives in the database. With a few extra lines you can retrieve the table contents and export it to an excel spreadsheet.
-~~~
-%% query your table of interest
-Dtbl = fetch(shared.Example, '*');
-T = struct2table(Dtbl);
+To understand what can be retrieved, look in the +yourlab folder. Here you see a list of tables from which metadata can be retrieved.
+See if this works by simply typeing; ```yourlab.Projects```
+You should see an abbreviated view of this table.
+Retrieving records follows this pattern; ```records = fetch(yourlab.Projects);```
+But can be a lot more complex and even use sql like queries;
+```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"', '*')```
+or if you want to limit the output to a few selected fields;
+```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"' , 'url', 'stimulus', 'subject')```
+
+For your conveniance I've created a few scripts to make it easier to retreive metadata from the various tables in FYD;
+Use, for example getSessions to retrieve the urls for the data you want to access, you can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date
+``` urls = getSessions(project='someProject', subject='aSubject') ```  
+
 
 %% Export to Excel sheet
 selpath = uigetdir();
