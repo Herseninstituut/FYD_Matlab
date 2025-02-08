@@ -5,7 +5,7 @@ Changes in the content and location of these session.json files are detected by 
 Hundreds of json files may be saved for a single project. However, the name of a project and other identifiers should be consistent across a dataset to support searchability. To enforce consistency, users are required to create valid identifiers from a user interface (UI). When users create their json files thay should only select items from these previously generated options. When metadata is added to the database, the filewatcher script checks whether the input values have been registered in advance.  
 If users do not use these UIs to create valid identifiers and json files, session.json files may generate errors after being placed on our storage server because the indexing script finds that some identifiers have not been registered in advance. As a user you can verify this by looking at the log for your lab on the FYD website.
 
-Each lab has it's own database. You can inspect the contnts of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):  
+Each lab has it's own database. You can inspect the contents of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):  
 [nhi-fyd/](https://nhi-fyd.nin.knaw.nl/)
 
 ***
@@ -87,6 +87,11 @@ The outcome of the indexing is reported in a log with html format that can be vi
 
 #### ParseErrorLog usage ####
 Copy the url to the log from your browser and adapt the script to always use this url.  It generates a table with the record values and the field that caused the error for each json file that failed to get indexed.
+
+GetDouble_JSONS.mlx and importandgenerate.mlx are two additional tools to manage your database
+```GetDouble_JSONS``` Checks for double entries. In some cases users copy their data to more than one location, leading to records with urls to both locations in the database. You can use this info to remove superfluous data, or to remove the jsonfiles.
+
+```importandgenerate``` Helps to generate identifiers and json files for datasets not yet associated with json files. Usually because json files were not generated at the time of data collection. Users should first fill in an excel sheet with the required information for each instance (path, project, dataset, subject, stimulus, condition, setup, investigator, sessionid, date) that will require a json file.  
 ***
 ## How to make json files for an existing dataset ##
 Organize your data according to the NIN  [data protocol](https://herseninstituut.sharepoint.com/sites/RDM/SitePages/FAIR-data.aspx)  first.
@@ -124,22 +129,24 @@ mysql can be called with standard sql queries.
 
 (Matlab has its own mysql client since 2020, which can also be used to access a mysql database but its usage differs from this implementation.)
 
-### Using Datajoint (dj) to acess and retrieve metadata
+### Using Datajoint (dj) to access and retrieve metadata
 Datajoint makes it a lot easier to access and retrieve data from the FYD database.  
 use [datajoint](https://docs.datajoint.io/)  
 Datajoint is an addon in matlab and a module in python. In matlab, go to APPS, select 'Get more Apps'. Search for Datajoint, add.
 
-I've created a function called: initDJ to make it easier to start working with datajoint. Call with the identifier for your lab. For example ```initDJ('somelab')```  
+I've created a function called: initDJ to make it easier to start working with datajoint.  
+Call with the identifier for your lab. For example ```initDJ('somelab')```  
 If you don't know the name of your lab, just run the previous line and you will see a list of lab names that are valid.
 
 You may enter a vlaid name but still get an error because you do not have a credentials file. Ask one of your labmembers or contact me get your credentials file.
 
 The first time you run initDJ it will create a schema for your lab. DJ requires a class folder with table definitions (an example, +yourlab, is included).  
 
-When you get a successful connection we can start using it.  
+When you get a successful connection we can start using Datajoint.  
 To understand what can be retrieved, look in the +yourlab folder. Here you see a list of tables from which metadata can be retrieved.  
 See if this works by simply typeing; ```yourlab.Projects```  
 You should see an abbreviated view of this table.  
+
 Retrieving records follows this pattern; ```records = fetch(yourlab.Projects);```  
 But can be a lot more complex and even use sql like queries;  
 ```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"', '*')```  
@@ -147,17 +154,11 @@ or if you want to limit the output to a few selected fields;
 ```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"' , 'url', 'stimulus', 'subject')```  
 
 For your conveniance I've created a few scripts to make it easier to retreive metadata from the various tables in FYD;  
-For example, use *getSessions* to retrieve the urls for the data you want to access, you can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date
-``` urls = getSessions(project='someProject', subject='aSubject') ```  
-
-
-%% Export to Excel sheet
-selpath = uigetdir();
-filename = fullfile(selpath, 'Example.xlsx');
-writetable(T,filename,'Sheet',1)
+For example, use *getSessions* to retrieve the urls for the data you want to access, you can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date.  
+``` records = getSessions(project='someProject', subject='aSubject') ```  
 ~~~
-
-GetDouble_JSONS.mlx and importandgenerate.mlx are two additional tools to manage your database
-```GetDouble_JSONS``` Checks for double entries. In some cases users copy their data to more than one location, leading to records with urls to both locations in the database. You can use this info to remove superfluous data, or to remove the jsonfiles.
-
-```importandgenerate``` Helps to generate identifiers and json files for datasets not yet associated with json files. Usually because json files were not generated at the time of data collection. Users should first fill in an excel sheet with the required information for each instance (path, project, dataset, subject, stimulus, condition, setup, investigator, sessionid, date) that will require a json file.  
+%% Export to Excel sheet  
+selpath = uigetdir();  
+filename = fullfile(selpath, 'Example.xlsx');  
+writetable(T,filename,'Sheet',1)  
+~~~
