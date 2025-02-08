@@ -1,16 +1,12 @@
 # Follow Your Data (FYD) for matlab [![DOI](https://zenodo.org/badge/342855808.svg)](https://zenodo.org/badge/latestdoi/342855808)
-A library of scripts to create session.json metadata files which are used as persistent identifiers to data objects and function as searchable metadata. Once they have been created by a user and saved with the data on our storage server (VS03), they are automatically processed by a filesystemwatcher script. This script saves the session.json metadata and it's url to a record in a database.
-Changes in the content and location of these session.json files are detected by the filesystemwatcher and the database is automatically updated, hence the name Follow Your Data (FYD).
+A library of scripts to create session.json metadata files which are used as persistent identifiers to data objects and function as searchable metadata. Once they have been created by a user and saved with the data on our storage server (VS03), they are automatically processed by a filesystemwatcher script. This script saves the session.json metadata and it's url to a record in a database.  
+Changes in the content and location of these session.json files are detected by the filesystemwatcher and the database is then automatically updated, hence the name Follow Your Data (FYD).
 
-Hundreds of json files may be saved for a single project. The name of a project and other identifiers should be consistent across a dataset to support searchability. To enforce consistency, users are required to create valid identifiers within a user interface (UI). When users create their json files thay should select select items from these previously generated options. If these UIs are not used to create valid identifiers and json files, there is a large chance that these session.json files generate errors after being placed on our storage server. This happens because the automaticaly indexing script checks whether the input values have been registered in advance. 
-
+Hundreds of json files may be saved for a single project. However, the name of a project and other identifiers should be consistent across a dataset to support searchability. To enforce consistency, users are required to create valid identifiers from a user interface (UI). When users create their json files thay should only select items from these previously generated options. When metadata is added to the database, the filewatcher script checks whether the input values have been registered in advance.  
+If users do not use these UIs to create valid identifiers and json files, session.json files may generate errors after being placed on our storage server because the indexing script finds that some identifiers have not been registered in advance. As a user you can verify this by looking at the log for your lab on the FYD website.
 
 Each lab has it's own database. You can inspect the contnts of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):  
 [nhi-fyd/](https://nhi-fyd.nin.knaw.nl/)
-
-
-
-Notifications about FYD_MAtlab will also appear in our micrsoft teams data management channel.
 
 ***
 #### Getting started
@@ -119,39 +115,39 @@ When your list is complete, generate the json files with : **Generatejsonfiles.m
 
 ***
 ## Find and Retrieve urls
-In the background getFYD and getdbfields use mysql.mexw64, This is Microsoft visual studio compiled C code to a matlab mex function.
-Examples of it's use can be found in getdbfields;
-    dgc = mysql('open', dbpar.Server, dbpar.User, dbpar.Passw);
+In the background getFYD and getdbfields use mysql.mexw64, This is Microsoft visual studio compiled C code to a matlab mex function.  
+Examples of it's use can be found in getdbfields;  
+    dgc = mysql('open', dbpar.Server, dbpar.User, dbpar.Passw);  
     dbdb = mysql('use', dbpar.Database);  
-    projects = mysql('SELECT projectid FROM projects');
+    projects = mysql('SELECT projectid FROM projects');  
 mysql can be called with standard sql queries.
 
 (Matlab has its own mysql client since 2020, which can also be used to access a mysql database but its usage differs from this implementation.)
 
 ### Using Datajoint (dj) to acess and retrieve metadata
-Datajoint makes it a lot easier to access and retrieve data from the FYD database.
-use [datajoint](https://docs.datajoint.io/)
+Datajoint makes it a lot easier to access and retrieve data from the FYD database.  
+use [datajoint](https://docs.datajoint.io/)  
 Datajoint is an addon in matlab and a module in python. In matlab, go to APPS, select 'Get more Apps'. Search for Datajoint, add.
 
-I've created a function called: initDJ to make it easier to start working with datajoint. Call with the identifier for your lab. For example ```initDJ('somelab')```
-If you don't know the name of your lab, just run the previous line and you will see a list of names that are valid.
+I've created a function called: initDJ to make it easier to start working with datajoint. Call with the identifier for your lab. For example ```initDJ('somelab')```  
+If you don't know the name of your lab, just run the previous line and you will see a list of lab names that are valid.
 
 You may enter a vlaid name but still get an error because you do not have a credentials file. Ask one of your labmembers or contact me get your credentials file.
 
 The first time you run initDJ it will create a schema for your lab. DJ requires a class folder with table definitions (an example, +yourlab, is included).  
 
-When you get a successful connection we can start using it.
-To understand what can be retrieved, look in the +yourlab folder. Here you see a list of tables from which metadata can be retrieved.
-See if this works by simply typeing; ```yourlab.Projects```
-You should see an abbreviated view of this table.
-Retrieving records follows this pattern; ```records = fetch(yourlab.Projects);```
-But can be a lot more complex and even use sql like queries;
-```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"', '*')```
-or if you want to limit the output to a few selected fields;
-```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"' , 'url', 'stimulus', 'subject')```
+When you get a successful connection we can start using it.  
+To understand what can be retrieved, look in the +yourlab folder. Here you see a list of tables from which metadata can be retrieved.  
+See if this works by simply typeing; ```yourlab.Projects```  
+You should see an abbreviated view of this table.  
+Retrieving records follows this pattern; ```records = fetch(yourlab.Projects);```  
+But can be a lot more complex and even use sql like queries;  
+```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"', '*')```  
+or if you want to limit the output to a few selected fields;  
+```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"' , 'url', 'stimulus', 'subject')```  
 
-For your conveniance I've created a few scripts to make it easier to retreive metadata from the various tables in FYD;
-Use, for example getSessions to retrieve the urls for the data you want to access, you can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date
+For your conveniance I've created a few scripts to make it easier to retreive metadata from the various tables in FYD;  
+For example, use *getSessions* to retrieve the urls for the data you want to access, you can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date
 ``` urls = getSessions(project='someProject', subject='aSubject') ```  
 
 
