@@ -8,7 +8,7 @@ You can inspect the database here (Nederlands Hersen Instituut - Follow Your Dat
 Notifications about FYD_MAtlab will also appear in our micrsoft teams data management channel.
 
 ***
-#### Getting started ####
+#### Getting started
 
 * Clone/download this repository to your local machine and add the root folder and the mysql folder to your Matlab path. 
 * Add jsonlab if you are running Matlab older than 2017b.
@@ -91,7 +91,8 @@ Copy the url to the log from your browser and adapt the script to always use thi
 Organize your data according to the NIN  [data protocol](https://herseninstituut.sharepoint.com/sites/RDM/SitePages/FAIR-data.aspx)  first.
 Each recording session with associated metadata should be in a separate folder. Ideally, the filename of each file, should contain sessionid of the containing folder.
 Here is an example, according to the recommended schema: project/data_collection/dataset/subject/session
-```
+
+~~~
 L5_Tuftapicsoma
   /data_collection
 	/Passive
@@ -102,8 +103,8 @@ L5_Tuftapicsoma
 				Pollux_20200323_003_eye.mat
 				Pollux_20200323_003_log.mat
 				Pollux_20200323_003_realtime.mat
-				Pollux_20200323_003_session.json 
- ```
+				Pollux_20200323_003_session.json
+~~~
 
 If you have ordered you data this way, you can now make an excel sheet with the neccessary metadata to automatically generate the json files at the appropriate locations. jsontemplate.xlsl contains columns for each required field.  
 
@@ -112,39 +113,44 @@ If you have ordered you data this way, you can now make an excel sheet with the 
 When your list is complete, generate the json files with : **Generatejsonfiles.m** and the json files will be saved at the provided path locations. If you have done this correctly, your json files will automatically show up on the website. Be sure to register all your projects, datasets, subjects, conditions , stimuli, setups in the database befor you save the json files. Otherwise you will get foreign constraint errors.
 
 ***
-## Find and Retrieve urls ##
+## Find and Retrieve urls
 A simple way to retrieve the urls for the data you want to access, you can use this function with search criteria.  
 ``` urls = getSessions(project='someProject', subject='aSubject') ```  
 In any combination, you can use the following search fields ; project, dataset, excond, subject, stimulus, setup, date
 
 Alternatively, you can use **callfydAccess.m**. Once you have filled in your search criteria press display to retrieve a list of files, associated with each json file in a selectable tree-view. Just as with the windows search bar, you can select file types with (\*) as a wild card character. nb. this can take quite a while to finish!
-```
-	urls = callfydAccess();
-```
+```urls = callfydAccess();```
 <img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/images/fydAccess.png" height="300" >
 Select all or just a few checkboxes to retrieve the urls of interest. After pressing save&close a list of urls is returned:  
 
-``` 
+~~~
 {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001.mat'				} 
 {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_Bh.mat'			} 
 {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase.mat' 	}   
 {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_001_GREEN_Fullfield_ImgBase_1sNL.mat'}   
 {'\\VS03\VS03-VandC-1\ACh\Active2\Beta\2Pdata\20211214\Beta_20211214_1_log.mat'                           } 
-```
+~~~
 
-***
+### dj (Datajoint) 
+use [datajoint](https://docs.datajoint.io/)
+Datajoint is an addon in matlab and a module in python. In matlab, go to APPS, select 'Get more Apps'. Search for Datajoint, add.
 
-### dj (datajoint) 
-use datajoint  : https://docs.datajoint.io/
-Datajoint is an addon in matlab and a module in python. It requires a class folder with table definitions (an example, for our test database, is included).  
+I've created a function called: initDJ to make it easier to start working with datajoint. Call with the identifier for your lab. For example ```initDJ('somelab')```
+If you don't know the name of your lab, just run the previous line and you will see a list of names that are valid.
+
+You may enter a vlaid name but still get an error because you do not have a credentials file. Ask one of your labmembers or contact me get your credentials file.
+
+The first time you run initDJ it will create a schema for your lab. DJ requires a class folder with table definitions (an example, +yourlab, is included).  
+
+When you get a successful connection we can start using it.
 testexample.m shows how to use datajoint in connection with the FYD database to make an updatable spreadsheet with a few lines of code.  
-```
+~~~
 setenvdj    %set environment credentials for MySql database
 populate(shared.Example) %update table of records with specific characteristics
-```
+~~~
 Once you have defined a table (see example.m in the +shared folder) it is easy to update this table as new data arrives in the database. With a few extra lines you can retrieve the table contents and export it to an excel spreadsheet.
-```
-%% query our table of interest
+~~~
+%% query your table of interest
 Dtbl = fetch(shared.Example, '*');
 T = struct2table(Dtbl);
 
@@ -152,7 +158,8 @@ T = struct2table(Dtbl);
 selpath = uigetdir();
 filename = fullfile(selpath, 'Example.xlsx');
 writetable(T,filename,'Sheet',1)
-```
+~~~
+
 GetDouble_JSONS.mlx and importandgenerate.mlx are two additional tools to manage your database
 ```GetDouble_JSONS``` Checks for double entries. In some cases users copy their data to more than one location, leading to records with urls to both locations in the database. You can use this info to remove superfluous data, or to remove the jsonfiles.
 

@@ -1,6 +1,22 @@
 function Con = initDJ(lab)
 % Con = initDJ(lab)
 % input : name of your lab's database: 
+%   roelfsemalab
+%   leveltlab
+%   heimellab
+%   lohmannlab
+%   kolelab
+%   willuhnlab
+%   socialbrainlab
+%   dezeeuwlab
+%   vansomerenlab
+%   siclarilab
+%   saltalab
+%   verhagenlab
+%   kalsbeeklab
+%   huitingalab
+%   kamermanslab
+%               
 % Chris van der togt, 2024
 
 p = mfilename('fullpath');
@@ -16,8 +32,16 @@ addpath(fyd_path, ...
         [fyd_path '\ephys'], ...
         [fyd_path '\par'], ...
         [fyd_path '\YAML'] )
+    
+%% get a credentials file from data manager if this fails, 
+global dbpar
 
-%% Check if Datajoint schema exists for this lab, if not create.
+dbpar = getlab(lab);
+if isempty(dbpar)
+    return
+end
+
+%% Check if Datajoint schema exists for this lab, if not create a new schema.
 if ~exist(fullfile(filepath,['+' lab]), 'dir')
     % copy the yourlab template and rename yourlab in each text file
     src=fullfile(filepath,'+yourlab');
@@ -39,14 +63,7 @@ if ~exist(fullfile(filepath,['+' lab]), 'dir')
     end
 end
 
-global dbpar
-
-%% get credentials file from data manager if this fails, 
-
-dbpar = getlab(lab);
-if isempty(dbpar)
-    return
-end
+%%
 
 setenv('DJ_HOST', dbpar.Server)
 setenv('DJ_USER', dbpar.User)
@@ -66,15 +83,24 @@ function dbpar = getlab(strlab)
                    'saltalab', 'NandN', 'verhagenlab', 'NRG', ...
                    'kalsbeeklab', 'HYP', 'huitingalab', 'IMM', ...
                    'kamermanslab', 'RSP');
-    
-    lab = labs.(strlab);
+               
+    opts.Interpreter = 'tex';
+    opts.WindowStyle = 'modal';
     dbpar = [];
-
-    prmfile = ['nhi_fyd_' lab 'parms'];
-    if exist(prmfile, 'file')
-        dbpar = eval(prmfile);
-    else 
-        errordlg(["No parameterfile found for: " strlab "."...
-          "Please contact Chris van der Togt to obtain this file." ...
-          "email:c.vandertogt@nin.knaw.nl"], 'Warning')
+    
+    if isfield(labs, strlab)
+        lab = labs.(strlab);
+        prmfile = ['nhi_fyd_' lab 'parms'];
+        if exist(prmfile, 'file')
+            dbpar = eval(prmfile);
+        else 
+            mydlg = errordlg(["\fontsize{14}No parameterfile found for: " strlab ""...
+              "Please contact Chris van der Togt to obtain this file." ...
+              "email:c.vandertogt@nin.knaw.nl" ], 'Warning', opts);
+           waitfor(mydlg);
+        end
+    else
+        mydlg = errordlg(["\fontsize{14}The name of the lab should be one of the following:" "" ...
+                    strjoin(fields(labs), '\n') ], 'Warning', opts);
+        waitfor(mydlg);
     end
