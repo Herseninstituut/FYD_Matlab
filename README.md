@@ -1,7 +1,11 @@
 # Follow Your Data (FYD) for matlab [![DOI](https://zenodo.org/badge/342855808.svg)](https://zenodo.org/badge/latestdoi/342855808)
-A library of scripts to create session.json metadata files which are used as persistent identifiers to data objects. These are automatically processed by a filesystemwatcher script. This script saves the session.json metadata and it's url to a record in a database.
+A library of scripts to create session.json metadata files which are used as persistent identifiers to data objects and function as searchable metadata. Once they have been created by a user and saved with the data on our storage server (VS03), they are automatically processed by a filesystemwatcher script. This script saves the session.json metadata and it's url to a record in a database.
+Changes in the content and location of these session.json files are detected by the filesystemwatcher and the database is automatically updated, hence the name Follow Your Data (FYD).
 
-Each lab has it's own database. You can inspect the contnts of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):
+Hundreds of json files may be saved for a single project. The name of a project and other identifiers should be consistent across a dataset to support searchability. To enforce consistency, users are required to create valid identifiers within a user interface (UI). When users create their json files thay should select select items from these previously generated options. If these UIs are not used to create valid identifiers and json files, there is a large chance that these session.json files generate errors after being placed on our storage server. This happens because the automaticaly indexing script checks whether the input values have been registered in advance. 
+
+
+Each lab has it's own database. You can inspect the contnts of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):  
 [nhi-fyd/](https://nhi-fyd.nin.knaw.nl/)
 
 
