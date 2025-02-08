@@ -1,9 +1,10 @@
 # Follow Your Data (FYD) for matlab [![DOI](https://zenodo.org/badge/342855808.svg)](https://zenodo.org/badge/latestdoi/342855808)
-A library of scripts to index global metadata automatically, and make data web/machine searchable.
+A library of scripts to create session.json metadata files which are used as persistent identifiers to data objects. These are automatically processed by a filesystemwatcher script. This script saves the session.json metadata and it's url to a record in a database.
 
-
-You can inspect the database here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):
+Each lab has it's own database. You can inspect the contnts of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):
 [nhi-fyd/](https://nhi-fyd.nin.knaw.nl/)
+
+
 
 Notifications about FYD_MAtlab will also appear in our micrsoft teams data management channel.
 
