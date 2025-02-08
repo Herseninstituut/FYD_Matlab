@@ -48,7 +48,7 @@ Simply run getFYD to enter and select your identifiers for projects, datasets, c
 ### Example mfile to create ID_session.json files using getdbfields
 
 
-[getdbfields](images/dbgetfields.png)
+<img src=images/dbgetfields.png>
 
 ```Matlab
 % getdbfields creates a json structure that includes the required fields for storing a
