@@ -108,7 +108,7 @@ L5_Tuftapicsoma
 
 If you have ordered you data this way, you can now make an excel sheet with the neccessary metadata to automatically generate the json files at the appropriate locations. jsontemplate.xlsl contains columns for each required field.  
 
-<img src="https://github.com/Herseninstituut/FYD_Matlab/blob/master/images/excel.png" >
+<img src=/images/excel.png >
 
 When your list is complete, generate the json files with : **Generatejsonfiles.m** and the json files will be saved at the provided path locations. If you have done this correctly, your json files will automatically show up on the website. Be sure to register all your projects, datasets, subjects, conditions , stimuli, setups in the database befor you save the json files. Otherwise you will get foreign constraint errors.
 
