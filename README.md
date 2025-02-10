@@ -1,12 +1,15 @@
 # Follow Your Data (FYD) for matlab [![DOI](https://zenodo.org/badge/342855808.svg)](https://zenodo.org/badge/latestdoi/342855808)
-A library of scripts to create session.json metadata files which are used as persistent identifiers to data objects and function as searchable metadata. Once they have been created by a user and saved with the data on our storage server (VS03), they are automatically processed by a filesystemwatcher script. This script saves the session.json metadata and it's url to a record in a database.  
+A library of scripts to create session.json files, and retrieve metadata from the FYD database. The session.json files are used as persistent identifiers to data objects and provide the searchable metadata to the FYD database. Once they have been created by a user and saved with the data of a single recording session on our storage server (VS03), they are automatically processed by a filesystemwatcher script. This script saves the session.json metadata and it's url to a record in a database.  
 Changes in the content and location of these session.json files are detected by the filesystemwatcher and the database is then automatically updated, hence the name Follow Your Data (FYD).
 
-Hundreds of json files may be saved for a single project. However, the name of a project and other identifiers should be consistent across a dataset to support searchability. To enforce consistency, users are required to create valid identifiers from a user interface (UI). When users create their json files thay should only select items from these previously generated options. When metadata is added to the database, the filewatcher script checks whether the input values have been registered in advance.  
-If users do not use these UIs to create valid identifiers and json files, session.json files may generate errors after being placed on our storage server because the indexing script finds that some identifiers have not been registered in advance. As a user you can verify this by looking at the log for your lab on the FYD website.
-
-Each lab has it's own database. You can inspect the contents of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):  
+Each lab has it's own database. You can inspect the contents of these databases here (Nederlands Hersen Instituut - Follow Your Data, __but only from within the intranet of our institute__):
 [nhi-fyd/](https://nhi-fyd.nin.knaw.nl/)
+
+Hundreds of json files may be saved for a single project. However, the name of a project and other identifiers should be consistent across a dataset to support searchability. To enforce consistency, users are required to create valid identifiers from a user interface (UI). When users create their json files thay should only select items from these previously generated options. When metadata is added to the database, the filewatcher script checks whether the input values have been registered in advance.  
+If users do not use these UIs to create valid identifiers, session.json files may generate errors after being placed on our storage server because the indexing script finds that some identifiers have not been registered in advance. As a user you can verify this by looking at the log on the FYD website. Each lab has a log file to check the consistency of it's database, which can be viewed after logging in.
+
+Each session.json file has a unique identifier (ID). This is included in the name of the file; ID_session.json. If two or more session.json files have the same ID, this will also be rejected and generate an error in the log file.
+
 
 ***
 #### Getting started
@@ -19,7 +22,6 @@ Each lab has it's own database. You can inspect the contents of these databases 
 * Store 1 json file with each recording session (for example, each block) in a separate folder.
 * Each json file should have a unique name consisting of an id (subject_data_sessnr
 * Always keep the json files together with your data.
-* A server script automatically indexes the json files and keeps an up to date list of urls to your data.
 * Do not put spaces in the folder names and identifiers you create for your json files.
 * You will likely need to install [vc_redist.x64.exe (2015-2022)](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170).  Particularly, if you see an error such as; "Invalid MEX-file....: The specified module could not be found." (Be aware that you need administrator rights to install this.)
 
@@ -138,7 +140,7 @@ I've created a function called: initDJ to make it easier to start working with d
 Call with the identifier for your lab. For example ```initDJ('somelab')```  
 If you don't know the name of your lab, just run the previous line and you will see a list of lab names that are valid.
 
-You may enter a vlaid name but still get an error because you do not have a credentials file. Ask one of your labmembers or contact me get your credentials file.
+You may enter a valid name but still get an error because you do not have a credentials file. Ask one of your labmembers or contact me to get your lab's credentials file.
 
 The first time you run initDJ it will create a schema for your lab. DJ requires a class folder with table definitions (an example, +yourlab, is included).  
 
@@ -147,18 +149,25 @@ To understand what can be retrieved, look in the +yourlab folder. Here you see a
 See if this works by simply typeing; ```yourlab.Projects```  
 You should see an abbreviated view of this table.  
 
-Retrieving records follows this pattern; ```records = fetch(yourlab.Projects);```  
-But can be a lot more complex and even use sql like queries;  
-```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"', '*')```  
-or if you want to limit the output to a few selected fields;  
-```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"' , 'url', 'stimulus', 'subject')```  
+Retrieving records follows this pattern;
+```records = fetch(yourlab.Projects,'*');```  
+This simply gets all the records and all the field values from the projects table.  
+Commonly, you will want to make subselections from a table. For example;  
+```rec = fetch(yourlab.Sessions & 'project="Ach" AND dataset="PassiveVisualStimulus" AND stimulus="grating"', 'url', 'subject', 'setup')```  
+This retrieves the records from the sessions table, for a particular project, dataset and stimulus, and limits the fields retrieved to url, subject and setup.
+For your conveniance I've created a few scripts to make it easier to retrieve metadata from the various tables in FYD;  
+For example, use *getSessions* to retrieve the urls to the data you want to access. You can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date.  
+~~~
+	records = getSessions(project='someProject', subject='aSubject') 
 
-For your conveniance I've created a few scripts to make it easier to retreive metadata from the various tables in FYD;  
-For example, use *getSessions* to retrieve the urls for the data you want to access, you can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date.  
-``` records = getSessions(project='someProject', subject='aSubject') ```  
+%% Export your records to an Excel sheet  
+	T = struct2table(records);
+	selpath = uigetdir();  
+	filename = fullfile(selpath, 'Example.xlsx');  
+	writetable(T,filename,'Sheet',1)  
 ~~~
-%% Export to Excel sheet  
-selpath = uigetdir();  
-filename = fullfile(selpath, 'Example.xlsx');  
-writetable(T,filename,'Sheet',1)  
-~~~
+
+Searching and selection of records can actually get quit complex and you might need to use queries like this;  
+```records = fetch(yourlab.Sessions & 'SELECT subject Like "LM%"', '*')```  
+If you want to understand more about MYSQL queries check [this](https://dev.mysql.com/doc/?target=_blank).
+
