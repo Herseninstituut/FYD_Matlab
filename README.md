@@ -138,7 +138,7 @@ Datajoint is an addon in matlab and a module in python. In matlab, go to APPS, s
 
 I've created a function called: initDJ to make it easier to start working with datajoint.  
 Call with the identifier for your lab. For example ```initDJ('somelab')```  
-If you don't know the name of your lab, just run the previous line and you will see a list of lab names that are valid.
+If you don't know the name of your lab, just run this command in matlab (with this invalid labname) and it will return a list of lab names that are valid.
 
 You may enter a valid name but still get an error because you do not have a credentials file. Ask one of your labmembers or contact me to get your lab's credentials file.
 
@@ -147,7 +147,9 @@ The first time you run initDJ it will create a schema for your lab. DJ requires 
 When you get a successful connection we can start using Datajoint.  
 To understand what can be retrieved, look in the +yourlab folder. Here you see a list of tables from which metadata can be retrieved.  
 See if this works by simply typeing; ```yourlab.Projects```  
-You should see an abbreviated view of this table.  
+You should see an abbreviated view of this table. 
+
+Inside the table definitions, you can also see what fields are defined for each table.
 
 Retrieving records follows this pattern;
 ```records = fetch(yourlab.Projects,'*');```  
@@ -155,6 +157,7 @@ This simply gets all the records and all the field values from the projects tabl
 Commonly, you will want to make subselections from a table. For example;  
 ```rec = fetch(yourlab.Sessions & 'project="Ach" AND dataset="PassiveVisualStimulus" AND stimulus="grating"', 'url', 'subject', 'setup')```  
 This retrieves the records from the sessions table, for a particular project, dataset and stimulus, and limits the fields retrieved to url, subject and setup.
+
 For your conveniance I've created a few scripts to make it easier to retrieve metadata from the various tables in FYD;  
 For example, use *getSessions* to retrieve the urls to the data you want to access. You can use this function with search criteria in any combination. The following search fields are valid; project, dataset, excond, subject, stimulus, setup, date.  
 ~~~
