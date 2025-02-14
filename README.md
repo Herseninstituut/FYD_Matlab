@@ -122,7 +122,9 @@ When your list is complete, generate the json files with : **Generatejsonfiles.m
 
 ***
 ## Find and Retrieve urls
-In the background getFYD and getdbfields use mysql.mexw64, This is Microsoft visual studio compiled C code to a matlab mex function.  
+The ability to search and retrieve urls to recording sessions, makes it possible to write scripts that access your data independent of fixed paths that might vary between you and other users. Scripts that access data through the FYD database can therefor easily be shared between users.
+
+In the background getFYD and getdbfields use mysql.mexw64. This MYSQL client is a matlab mex function, compiled from C code with Microsoft visual studio.  
 Examples of it's use can be found in getdbfields;  
     dgc = mysql('open', dbpar.Server, dbpar.User, dbpar.Passw);  
     dbdb = mysql('use', dbpar.Database);  
