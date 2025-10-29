@@ -1,8 +1,8 @@
 %{
 # sessions
-sessionid                   : varchar(50)                   # unique name
-url                         : varchar(250)                  # 
-server                      : varchar(20)                   # 
+sessionid                   : varchar(100)                   # unique name
+url                         : varchar(500)                  # 
+server                      : varchar(30)                   # 
 ---
 idx : int(11) autoincrement
 -> yourlab.Projects
@@ -13,7 +13,7 @@ idx : int(11) autoincrement
 -> yourlab.Setups
 date : date
 logfile : varchar(50)
--> yourlab.Researcher
+-> yourlab.Investigator
 %}
 
 classdef Sessions < dj.Manual
