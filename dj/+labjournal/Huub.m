@@ -12,6 +12,8 @@ subject :   varchar(30)
 date    :   date
 setup   :   varchar(30)
 stimulus    : varchar(50)
+screen_distance : int
+stim_time       : float
 comment = '' :   varchar(500) 
 %}
 
