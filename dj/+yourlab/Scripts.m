@@ -1,12 +1,12 @@
 %{
 # scripts
-scriptid : varchar(30)      # unique name
+scriptid    : varchar(30)      # unique name
+idx         : int(3) auto_increment
 ---
-idx : int(3) auto_increment
-url = NULL : varchar(250) 
-fileex : varchar(5)
-shortdescr = NULL : varchar(250)
-longdescr = NULL : varchar(3000)
+url = NULL  : varchar(250) 
+fileex      : varchar(5)
+shortdescr=NULL : varchar(250)
+longdescr=NULL  : varchar(6000)
 %}
 
 classdef Scripts < dj.Manual
