@@ -1,8 +1,9 @@
 
 
-**Labjournal database**
-A place to create your own lab journals
-Simply create a new table after initializing Datajoint : 
+**Labjournal database**  
+Create your own lab journal:  
+
+We will create a new table called "Huub" in the *labjournal* database after initializing Datajoint : 
 ```
 % Initialize
 initDJ('leveltlab')
@@ -20,7 +21,7 @@ Choose table tier:
   P=part
  (L/M/I/C/P) > M
  ```
- Then a file is created called Huub.m in the +labjournal folder with:
+ We will choose **M**  (for Manual) and then a file is created called Huub.m in the +labjournal folder with:
 ```MATLAB
 %{
 # my newest table
@@ -33,7 +34,7 @@ classdef Huub < dj.Manual
 end
 ```
 
-You can now add fields to this tabel schema. For example here are some fieds from the FYD session table;
+This is a datajoint table schema and you can can add fields to this schema. For example here are some fields from the FYD session table;
 ```MATLAB
 % To see how they are defined in the FYD session table use: 
 describe(leveltlab.Sessions)
@@ -67,6 +68,7 @@ drop(labjournal.Huub)
 
 Now let's fill this table wth some data. First we will get the relevent sessions (get data for subject Beta):
 ```MATLAB
+% getSessions is a conveniance script I wrote to get sessions associated with a particular project, dataset, subject, stimulus, setup or date range.
 Ses = getSessions(subject='Beta')
 
 Ses = 
@@ -108,7 +110,7 @@ Nice! Now we can simply insert these into our labjournal.
 ```MATLAB
 insert(labjournal.Huub, nwSes)
 ```
-To retrieve whats in the database, we should use fetch on Huub and use '*' to retrieve all the fields:
+To retrieve what's in the database, we should use fetch on labjournal.Huub and use '*' to retrieve all the fields:
 ```MATLAB
 huubs_labjournal = fetch(labjournal.Huub, '*');
 ```
@@ -122,12 +124,13 @@ update(labjournal.Huub & 'sessionid="Beta_20211029_002"', 'comment', 'Hey there 
 Here you see that we can update the comment field for a specific record by it's sessionid.   
 Another way, if you need to update several fields at once, is to retrieve the whole record, change the values in the record, then delete the record in the database and insert the updated version. You cannot simply insert the updated record, this will lead to an error caused by a duplicate sessionid.
 
-But I would like to add metadata from other tables, such as metadata associated with the subject:
+**Adding metadata from other tables**  
+But I would like to add metadata from other tables, such as metadata associated with the subject:  
 First get the selected subjects:
 ```MATLAB
 % I only have one subject in this case
 subjects = unique({ nwSes(:).subject });
-subject_meta = getSubjects(subjects)
+subject_meta = getSubjects(subjects);   % Conveniance script to get subject metadata.
 for i = 1:length(subjects)
     sel = find([ arrayfun(@(x) strcmp(x.subject, subjects{i}), huubs_labjournal) ])
     for j = 1:length(sel)
@@ -243,9 +246,10 @@ Clear your workspace and check using the initial code to verify that huubs labjo
 huubs_labjournal = fetch(labjournal.Huub, '*');
 ```
 
-**Automating your labjournal**
-Instead of clearing and updating your labjournal, it would be nice if we could automatically add records to the table.
-TODO this we will make a very simple manual table called HuubRecords, simply to define which records I would like to add to my labjournal.
+**Automating your labjournal**  
+Instead of clearing and updating your labjournal, it would be nice if we could automatically add records to the table, without having to regenerate the whole table.
+This is important, because you might want to manually insert data, such as comments or annotate records with a good or bad qualification. If you renew the table these additions would be lost.  
+TODO this we will make a very simple manual table called HuubRecords, a list of sessionids to simply define which records I would like to add to my labjournal.
 ```MATLAB 
   describe(labjournal.HuubRecords)
 
@@ -260,7 +264,7 @@ nwSes = rmfield(Ses, 'idx');
 insert(labjournal.HuubsRecords, nwSes)
 
 
-% create a automatically populated table
+% To automatically populate our labjournal we create a datajoint imported table:
 %{
      # Huub's automated lab Journal
      sessionid                   : varchar(100)                  # 
@@ -338,7 +342,16 @@ end
 populate(labjournal.HuubAuto)
 
 huubs_labjournal = fetch(labjournal.HuubAuto, '*')
-
+```
 You need to call populate on this table if you add records to the HuubRecords table, but datajoint adds new records to the HuubAuto table without dropping and renewing the table, which means you can add comments to specific records without losing them later.
 
+For example, lets add mouse Delta:
+```MATLAB
+Ses = fetch(leveltlab.Sessions & 'subject="Delta"', 'sessionid');
+nwSes = rmfield(Ses, 'idx');
+% inserts must be a structure or a structure array
+insert(labjournal.HuubsRecords, nwSes)
+
+% Records for mouse Delta are added to the labjournal
+populate(labjournal.HuubAuto)
 ```
