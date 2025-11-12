@@ -1,9 +1,10 @@
 
 
-**Labjournal database**  
-Create your own lab journal:  
+# The Labjournal Database   
+Create your own lab journal (contact me if you would like to make use of this service):  
 
-We will create a new table called "Huub" in the *labjournal* database after initializing Datajoint : 
+## A short introduction *(read de datajoint manual for in depth understanding)*: 
+We will create a new table called "Huub" in the *labjournal* database after initializing Datajoint for the levelt lab: 
 ```
 % Initialize
 initDJ('leveltlab')
@@ -68,6 +69,10 @@ drop(labjournal.Huub)
 
 Now let's fill this table wth some data. First we will get the relevent sessions (get data for subject Beta):
 ```MATLAB
+% This is the official datajoint way
+key.subject = 'Beta';
+Ses = fetch(leveltlab.Sessions & key)
+
 % getSessions is a conveniance script I wrote to get sessions associated with a particular project, dataset, subject, stimulus, setup or date range.
 Ses = getSessions(subject='Beta')
 
@@ -146,6 +151,7 @@ end
 But wait, I would also like to import values from the associated json or log files that are not in the json database.
 for example:
 ```MATLAB
+% This is possible because the sessionid is in the name of the json file,
 p2json = fullfile(huubs_labjournal(1).url, [huubs_labjournal(1).sessionid '_session.json'])
 % Load json file as a data structure
 J = loadjson(p2json);
@@ -164,8 +170,9 @@ J = loadjson(p2json);
          logfile: 'Beta_20210916_002_log'
          display: [1×1 struct]
 
-%get the url to the logfile
-logpath = fullfile(huubs_labjournal(1).url, [J.logfile '.mat'])
+% The sessionid is also in the head part of all other files, which makes this dataset machine readable
+% get the url to the logfile
+logpath = fullfile(huubs_labjournal(1).url, [huubs_labjournal(1).sessionid '_log.mat'])
 log  = load(logpath)
 
   struct with fields:
@@ -192,7 +199,7 @@ for i = 1:length(huubs_labjournal)
   end
 
   try
-    log = load(fullfile(huubs_labjournal(i).url, [J.logfile '.mat']));
+    log = load(fullfile(huubs_labjournal(i).url, [huubs_labjournal(i).sessionid '_log.mat']));
     stim_time = log.Parameters.time;
   catch
     stim_time = 0;
@@ -249,7 +256,7 @@ huubs_labjournal = fetch(labjournal.Huub, '*');
 **Automating your labjournal**  
 Instead of clearing and updating your labjournal, it would be nice if we could automatically add records to the table, without having to regenerate the whole table.
 This is important, because you might want to manually insert data, such as comments or annotate records with a good or bad qualification. If you renew the table these additions would be lost.  
-TODO this we will make a very simple manual table called HuubRecords, a list of sessionids to simply define which records I would like to add to my labjournal.
+TODO: We will make a very simple manual table called HuubRecords, a list of sessionids to simply define which records I would like to add to my labjournal.
 ```MATLAB 
   describe(labjournal.HuubRecords)
 
