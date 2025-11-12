@@ -71,9 +71,9 @@ Now let's fill this table wth some data. First we will get the relevent sessions
 ```MATLAB
 % This is the official datajoint way
 key.subject = 'Beta';
-Ses = fetch(leveltlab.Sessions & key)
+Ses = fetch(leveltlab.Sessions & key, '*')
 
-% getSessions is a conveniance script I wrote to get sessions associated with a particular project, dataset, subject, stimulus, setup or date range.
+% Alternatively, use getSessions a conveniance script I wrote to get sessions associated with a particular project, dataset, subject, stimulus, setup or date range.
 Ses = getSessions(subject='Beta')
 
 Ses = 
@@ -256,7 +256,7 @@ huubs_labjournal = fetch(labjournal.Huub, '*');
 **Automating your labjournal**  
 Instead of clearing and updating your labjournal, it would be nice if we could automatically add records to the table, without having to regenerate the whole table.
 This is important, because you might want to manually insert data, such as comments or annotate records with a good or bad qualification. If you renew the table these additions would be lost.  
-TODO: We will make a very simple manual table called HuubRecords, a list of sessionids to simply define which records I would like to add to my labjournal.
+TODO: We will make a very simple manual table called HuubRecords, a list of sessionids to simply define which records I would like to add to my labjournal. Then we will make an automatically importing table which imports sessions from the HuubsRecords list.  
 ```MATLAB 
   describe(labjournal.HuubRecords)
 
