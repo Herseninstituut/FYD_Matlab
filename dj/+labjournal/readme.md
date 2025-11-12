@@ -253,10 +253,11 @@ Clear your workspace and check using the initial code to verify that huubs labjo
 huubs_labjournal = fetch(labjournal.Huub, '*');
 ```
 
-**Automating your labjournal**  
-Instead of clearing and updating your labjournal, it would be nice if we could automatically add records to the table, without having to regenerate the whole table.
+## Automatically updating your labjournal  
+The previous examples are rather cumbersome if you would have to manage your labjournal this way.  
+So, instead of clearing and updating the labjournal, it would be nice if we could automatically add records to the table, without having to regenerate the whole table.
 This is important, because you might want to manually insert data, such as comments or annotate records with a good or bad qualification. If you renew the table these additions would be lost.  
-TODO: We will make a very simple manual table called HuubRecords, a list of sessionids to simply define which records I would like to add to my labjournal. Then we will make an automatically importing table which imports sessions from the HuubsRecords list.  
+TODO: We will make a very simple manual table called HuubRecords, a list of sessionids to define which records I would like to add to my labjournal. Then we will make an dj.Imported table which imports sessions from the HuubsRecords list when I call the populate function on it. Note that we could also provide sessionid entries in other ways, i.e. by retrieving them directly from the lab database.     
 ```MATLAB 
   describe(labjournal.HuubRecords)
 
@@ -294,6 +295,7 @@ insert(labjournal.HuubsRecords, nwSes)
 %}
 
 classdef HuubAuto < dj.Imported
+    % The key source provides the entries to which this table gets populated
     properties (Dependent)
         keySource
     end
@@ -345,12 +347,12 @@ classdef HuubAuto < dj.Imported
     end
 end
 
-% Using the input from HuubRecords we populate the HuubAuto table
+% Now populate HuubAuto
 populate(labjournal.HuubAuto)
 
 huubs_labjournal = fetch(labjournal.HuubAuto, '*')
 ```
-You need to call populate on this table if you add records to the HuubRecords table, but datajoint adds new records to the HuubAuto table without dropping and renewing the table, which means you can add comments to specific records without losing them later.
+You need to call populate on this table when you add records to the HuubRecords table, but datajoint adds new records to the HuubAuto table without dropping and renewing the table, which means you can add comments to specific records without losing them later.
 
 For example, lets add mouse Delta:
 ```MATLAB
