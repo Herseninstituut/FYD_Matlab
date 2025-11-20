@@ -3,7 +3,7 @@
 # The Labjournal Database   
 Create your own lab journal (contact me if you would like to make use of this service):  
 
-## A short introduction *(read de datajoint manual for in depth understanding)*: 
+#### A short introduction *(read de datajoint manual for in depth understanding)*: 
 We will create a new table called "Huub" in the *labjournal* database after initializing Datajoint for the levelt lab: 
 ```
 % Initialize
@@ -253,7 +253,7 @@ Clear your workspace and check using the initial code to verify that huubs labjo
 huubs_labjournal = fetch(labjournal.Huub, '*');
 ```
 
-## Automatically updating your labjournal  
+### Automatically updating your labjournal  
 The previous examples are rather cumbersome if you would have to manage your labjournal this way.  
 So, instead of clearing and updating the labjournal, it would be nice if we could automatically add records to the table, without having to regenerate the whole table.
 This is important, because you might want to manually insert data, such as comments or annotate records with a good or bad qualification. If you renew the table these additions would be lost.  
@@ -350,17 +350,73 @@ end
 % Now populate HuubAuto
 populate(labjournal.HuubAuto)
 
-huubs_labjournal = fetch(labjournal.HuubAuto, '*')
+LJ = fetch(labjournal.HuubAuto, '*')
 ```
 You need to call populate on this table when you add records to the HuubRecords table, but datajoint adds new records to the HuubAuto table without dropping and renewing the table, which means you can add comments to specific records without losing them later.
 
-For example, lets add mouse Delta:
+For example, lets add a mouse to see how this works:
 ```MATLAB
-Ses = fetch(leveltlab.Sessions & 'subject="Delta"', 'sessionid');
-nwSes = rmfield(Ses, 'idx');
+key.subject='Delta'
+Ses = fetch(leveltlab.Sessions & key, 'sessionid');
+Ses = rmfield(Ses, 'idx');
 % inserts must be a structure or a structure array
-insert(labjournal.HuubsRecords, nwSes)
+insert(labjournal.HuubRecords, Ses)
 
 % Records for mouse Delta are added to the labjournal
 populate(labjournal.HuubAuto)
+
+LJ = fetch(labjournal.HuubAuto, '*')
+```
+
+In general you will not make an intermediate table to add sessionids. It is more efficient to generate your labjournal directly from your lab's Session table using an appropriate selection key. So instead of using **d = labjournal.HuubRecords;** as your key source, you would use something like this: 
+```MATLAB
+key.dataset='Dark_rearing';
+key.stimulus='rfspheric';
+id = leveltlab.Sessions & key
+```
+
+### Finally, lets make a labjournal app for Huub
+
+```LJHuub``` populates the HuubAuto database when you open the app, lets you add comments and allows you to save the table to an excell sheet.
+
+Have a look at LJHuub.mlapp in the app designer. It only contains a table ui and a menu to export your labjournal to excell.
+In the code view you can see how it updates and initializes the labjournal.
+And makes the last column for comments editable.
+
+
+```MATLAB
+        function startupFcn(app)
+            % Initialize the connection with FYD
+            initDJ('leveltlab');
+            % Update your labjournal
+            populate(labjournal.HuubAuto);
+            % retrieve the contents
+            lj = fetch(labjournal.HuubAuto, '*');
+            %Convert to a table and initialze the UItable in this app
+            T = struct2table(lj);
+            app.UITable.Data = T;
+            app.UITable.ColumnName = T.Properties.VariableNames;
+            app.UITable.ColumnSortable = true;
+            % make the comment column editable
+            bEdit = [false(1, length(T.Properties.VariableNames) -1) true];
+            app.UITable.ColumnEditable = bEdit;
+        end
+
+% this function updates the comment in the database
+        function updateComments(app, event)
+            indices = event.Indices;
+            newData = event.NewData;
+
+            key.sessionid = app.UITable.Data.sessionid{indices(1,1)};
+            update(labjournal.HuubAuto & key, 'comment', newData)
+        end
+
+% and this function lets you export your table to an excell sheet.
+        function ExportExcell(app, event)
+            T = app.UITable.Data;
+            selpath = uigetdir();
+            filename = fullfile(selpath, 'Dark_reared.xlsx');
+            writetable(T,filename,'Sheet',1)
+        end
+
 ```
